@@ -1,11 +1,20 @@
 """Module to handle endpoint responses"""
 
-from fastapi import APIRouter, Depends, HTTPException, Path, status
-from requests_toolbelt.sessions import BaseUrlSession
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from aind_smartsheet_service_server.handler import SessionHandler
-from aind_smartsheet_service_server.models import Content, HealthCheck
-from aind_smartsheet_service_server.session import get_session
+from aind_smartsheet_service_server.models import (
+    FundingModel,
+    HealthCheck,
+    PerfusionsModel,
+    ProtocolsModel,
+)
+from aind_smartsheet_service_server.session import (
+    SmartsheetClient,
+    get_session,
+)
 
 router = APIRouter()
 
@@ -29,20 +38,125 @@ async def get_health() -> HealthCheck:
 
 
 @router.get(
-    "/{example_arg}",
-    response_model=Content,
+    "/funding",
+    response_model=List[FundingModel],
 )
-async def get_content(
-    example_arg: str = Path(..., examples=["raw", "length"]),
-    session: BaseUrlSession = Depends(get_session),
+async def get_funding(
+    project_name: Optional[str] = Query(
+        default=None,
+        examples=["Discovery-Neuromodulator circuit dynamics during foraging"],
+    ),
+    subproject: Optional[str] = Query(
+        default=None,
+        examples=["Subproject 2 Molecular Anatomy Cell Types"],
+    ),
+    session: SmartsheetClient = Depends(get_session),
 ):
     """
-    ## Example content
-    Return either the raw content or the number of characters.
+    ## Funding
+    Returns funding information for a project_name and subproject.
     """
-    content = SessionHandler(session=session).get_info(example_arg=example_arg)
-    # Adding this for illustrative purposes.
-    if len(content.info) == 0:
+    handler = SessionHandler(session=session)
+    #  TODO: Cache sheet in redis
+    sheet: List[FundingModel] = handler.get_parsed_sheet(
+        sheet_id=session.smartsheet_settings.sheet_id_map["funding"],
+        model=FundingModel,
+    )
+    content = SessionHandler(session=session).get_project_funding_info(
+        sheet_model=sheet, project_name=project_name, subproject=subproject
+    )
+    if len(content) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    else:
+        return content
+
+
+@router.get(
+    "/project_names",
+    response_model=List[str],
+)
+async def get_project_names(
+    session: SmartsheetClient = Depends(get_session),
+):
+    """
+    ## Project Names
+    Returns a list of project names.
+    """
+    handler = SessionHandler(session=session)
+    #  TODO: Cache sheet in redis
+    sheet: List[FundingModel] = handler.get_parsed_sheet(
+        sheet_id=session.smartsheet_settings.sheet_id_map["funding"],
+        model=FundingModel,
+    )
+    content = SessionHandler(session=session).get_project_names(
+        sheet_model=sheet
+    )
+    if len(content) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    else:
+        return content
+
+
+@router.get(
+    "/protocols",
+    response_model=List[ProtocolsModel],
+)
+async def get_protocols(
+    protocol_name: Optional[str] = Query(
+        default=None,
+        examples=[
+            (
+                "Tetrahydrofuran and Dichloromethane Delipidation of a Whole "
+                "Mouse Brain"
+            )
+        ],
+    ),
+    session: SmartsheetClient = Depends(get_session),
+):
+    """
+    ## Protocols
+    Returns protocols given a name.
+    """
+    handler = SessionHandler(session=session)
+    #  TODO: Cache sheet in redis
+    sheet: List[ProtocolsModel] = handler.get_parsed_sheet(
+        sheet_id=session.smartsheet_settings.sheet_id_map["protocols"],
+        model=ProtocolsModel,
+    )
+    content = SessionHandler(session=session).get_protocols_info(
+        sheet_model=sheet, protocol_name=protocol_name
+    )
+    if len(content) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    else:
+        return content
+
+
+@router.get(
+    "/perfusions",
+    response_model=List[PerfusionsModel],
+)
+async def get_perfusions(
+    subject_id: Optional[str] = Query(
+        default=None,
+        examples=["689418"],
+    ),
+    session: SmartsheetClient = Depends(get_session),
+):
+    """
+    ## Perfusions
+    Returns perfusions for a given subject_id.
+    """
+    handler = SessionHandler(session=session)
+    # TODO: Cache sheet in redis
+    sheet: List[PerfusionsModel] = handler.get_parsed_sheet(
+        sheet_id=session.smartsheet_settings.sheet_id_map["perfusions"],
+        model=PerfusionsModel,
+    )
+    content = SessionHandler(session=session).get_perfusions_info(
+        sheet_model=sheet, subject_id=subject_id
+    )
+    if len(content) == 0:
         raise HTTPException(status_code=404, detail="Not found")
     else:
         return content
