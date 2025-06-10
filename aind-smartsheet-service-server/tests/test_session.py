@@ -12,8 +12,10 @@ class TestSession:
         """Tests get_session method"""
 
         session = next(get_session())
-        base_url = session.base_url
-        assert "example" == base_url
+        assert (
+            "abcdef"
+            == session.smartsheet_settings.access_token.get_secret_value()
+        )
 
 
 if __name__ == "__main__":

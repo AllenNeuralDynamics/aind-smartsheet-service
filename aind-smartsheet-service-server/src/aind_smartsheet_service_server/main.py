@@ -15,17 +15,17 @@ log_level = os.getenv("LOG_LEVEL", "INFO")
 logging.basicConfig(level=log_level)
 
 description = """
-## aind-service-template
+## aind-smartsheet-service
 
-Service to pull data from example backend.
+Service to pull data from SmartSheet.
 
 """
 
 # noinspection PyTypeChecker
 app = FastAPI(
-    title="aind-service-template",
+    title="aind-smartsheet-service",
     description=description,
-    summary="Serves data from example backend.",
+    summary="Serves data from SmartSheet.",
     version=service_version,
 )
 
