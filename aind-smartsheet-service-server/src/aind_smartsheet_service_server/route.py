@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, Query, status
 
 from aind_smartsheet_service_server.handler import SessionHandler
 from aind_smartsheet_service_server.models import (
@@ -41,7 +41,7 @@ async def get_health() -> HealthCheck:
     "/funding",
     response_model=List[FundingModel],
 )
-async def get_funding(
+def get_funding(
     project_name: Optional[str] = Query(
         default=None,
         examples=["Discovery-Neuromodulator circuit dynamics during foraging"],
@@ -65,17 +65,14 @@ async def get_funding(
     content = SessionHandler(session=session).get_project_funding_info(
         sheet_model=sheet, project_name=project_name, subproject=subproject
     )
-    if len(content) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
-    else:
-        return content
+    return content
 
 
 @router.get(
     "/project_names",
     response_model=List[str],
 )
-async def get_project_names(
+def get_project_names(
     session: SmartsheetClient = Depends(get_session),
 ):
     """
@@ -91,17 +88,14 @@ async def get_project_names(
     content = SessionHandler(session=session).get_project_names(
         sheet_model=sheet
     )
-    if len(content) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
-    else:
-        return content
+    return content
 
 
 @router.get(
     "/protocols",
     response_model=List[ProtocolsModel],
 )
-async def get_protocols(
+def get_protocols(
     protocol_name: Optional[str] = Query(
         default=None,
         examples=[
@@ -126,17 +120,14 @@ async def get_protocols(
     content = SessionHandler(session=session).get_protocols_info(
         sheet_model=sheet, protocol_name=protocol_name
     )
-    if len(content) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
-    else:
-        return content
+    return content
 
 
 @router.get(
     "/perfusions",
     response_model=List[PerfusionsModel],
 )
-async def get_perfusions(
+def get_perfusions(
     subject_id: Optional[str] = Query(
         default=None,
         examples=["689418"],
@@ -156,7 +147,4 @@ async def get_perfusions(
     content = SessionHandler(session=session).get_perfusions_info(
         sheet_model=sheet, subject_id=subject_id
     )
-    if len(content) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
-    else:
-        return content
+    return content
