@@ -44,11 +44,24 @@ async def get_health() -> HealthCheck:
 def get_funding(
     project_name: Optional[str] = Query(
         default=None,
-        examples=["Discovery-Neuromodulator circuit dynamics during foraging"],
+        openapi_examples={
+            "default": {
+                "summary": "A sample project name",
+                "description": "Example project name for smartsheet",
+                "value": "Discovery-Neuromodulator circuit dynamics"
+                " during foraging",
+            }
+        },
     ),
     subproject: Optional[str] = Query(
         default=None,
-        examples=["Subproject 2 Molecular Anatomy Cell Types"],
+        openapi_examples={
+            "default": {
+                "summary": "A sample subproject",
+                "description": "Example subproject name",
+                "value": "Subproject 2 Molecular Anatomy Cell Types",
+            }
+        },
     ),
     session: SmartsheetClient = Depends(get_session),
 ):
@@ -98,12 +111,16 @@ def get_project_names(
 def get_protocols(
     protocol_name: Optional[str] = Query(
         default=None,
-        examples=[
-            (
-                "Tetrahydrofuran and Dichloromethane Delipidation of a Whole "
-                "Mouse Brain"
-            )
-        ],
+        openapi_examples={
+            "default": {
+                "summary": "A sample protocol name",
+                "description": "Example protocol name",
+                "value": (
+                    "Tetrahydrofuran and Dichloromethane Delipidation of a "
+                    "Whole Mouse Brain"
+                ),
+            }
+        },
     ),
     session: SmartsheetClient = Depends(get_session),
 ):
@@ -130,7 +147,13 @@ def get_protocols(
 def get_perfusions(
     subject_id: Optional[str] = Query(
         default=None,
-        examples=["689418"],
+        openapi_examples={
+            "default": {
+                "summary": "A sample subject id",
+                "description": "Example subject id",
+                "value": "689418",
+            }
+        },
     ),
     session: SmartsheetClient = Depends(get_session),
 ):
