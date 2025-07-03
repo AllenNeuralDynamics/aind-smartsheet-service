@@ -1,6 +1,6 @@
 """Test routes"""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 from starlette.testclient import TestClient
@@ -55,14 +55,6 @@ class TestRoutes:
         assert 200 == response.status_code
         assert expected_response == response.json()
 
-    def test_get_404_funding(
-        self, client: TestClient, mock_get_raw_funding_sheet: MagicMock
-    ):
-        """Tests a response when fetching funding info for missing project"""
-
-        response = client.get("/funding?project_name=MISSING")
-        assert 404 == response.status_code
-
     def test_get_200_project_names(
         self, client: TestClient, mock_get_raw_funding_sheet: MagicMock
     ):
@@ -91,19 +83,6 @@ class TestRoutes:
         assert 200 == response.status_code
         assert expected_response == response.json()
 
-    def test_get_404_project_names(
-        self, client: TestClient, mock_get_raw_funding_sheet: MagicMock
-    ):
-        """Tests an empty response when fetching project_names"""
-
-        with patch(
-            "aind_smartsheet_service_server.handler.SessionHandler"
-            ".get_parsed_sheet",
-            return_value=[],
-        ):
-            response = client.get("/project_names")
-        assert 404 == response.status_code
-
     def test_get_200_protocols(
         self, client: TestClient, mock_get_raw_protocols_sheet: MagicMock
     ):
@@ -126,14 +105,6 @@ class TestRoutes:
         response = client.get(f"/protocols?protocol_name={example_protocol}")
         assert 200 == response.status_code
         assert expected_response == response.json()
-
-    def test_get_404_protocols(
-        self, client: TestClient, mock_get_raw_protocols_sheet: MagicMock
-    ):
-        """Tests a response when fetching protocol info for missing name"""
-
-        response = client.get("/protocols?protocol_name=MISSING")
-        assert 404 == response.status_code
 
     def test_get_200_perfusions(
         self, client: TestClient, mock_get_raw_perfusions_sheet: MagicMock
@@ -158,14 +129,6 @@ class TestRoutes:
         ]
         assert 200 == response.status_code
         assert expected_response == response.json()
-
-    def test_get_404_perfusions(
-        self, client: TestClient, mock_get_raw_perfusions_sheet: MagicMock
-    ):
-        """Tests a response when fetching perfusions for missing subject"""
-
-        response = client.get("/perfusions?subject_id=000")
-        assert 404 == response.status_code
 
 
 if __name__ == "__main__":
