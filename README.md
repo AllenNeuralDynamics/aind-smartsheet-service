@@ -8,7 +8,7 @@ REST service to connect to Smartsheet and return information.
 - The server code is developed in the aind-smartsheet-service-server package.
 - On a push to main, a docker image will be built and published to GitHub's container registry.
 - You can then run the server in a docker container or k8s pod.
-- More details can be found in the [service README](aind-smartsheet-service-server/README.md) file
+- More details can be found in the [service README](aind-smartsheet-service-server/README.md) file.
 
 ### Auto-generated client code.
 
