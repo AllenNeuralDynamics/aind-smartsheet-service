@@ -1,6 +1,6 @@
 {
    "packageName": "aind_smartsheet_service_async_client",
    "projectName": "aind-smartsheet-service-async-client",
-   "libary": "asyncio",
+   "library": "asyncio",
    "packageVersion": "0.1.4"
 }
