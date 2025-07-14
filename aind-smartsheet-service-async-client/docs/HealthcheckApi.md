@@ -34,13 +34,13 @@ configuration = aind_smartsheet_service_async_client.Configuration(
 
 
 # Enter a context with an instance of the API client
-with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
+async with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_smartsheet_service_async_client.HealthcheckApi(api_client)
 
     try:
         # Perform a Health Check
-        api_response = api_instance.get_health()
+        api_response = await api_instance.get_health()
         print("The response of HealthcheckApi->get_health:\n")
         pprint(api_response)
     except Exception as e:

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aind_smartsheet_service_async_client"
-version = "0.1.4"
+version = "0.1.5"
 description = "aind-smartsheet-service"
 authors = ["OpenAPI Generator Community <team@openapitools.org>"]
 license = "NoLicense"
@@ -14,6 +14,8 @@ python = "^3.9"
 
 urllib3 = ">= 2.1.0, < 3.0.0"
 python-dateutil = ">= 2.8.2"
+aiohttp = ">= 3.8.4"
+aiohttp-retry = ">= 2.8.3"
 pydantic = ">= 2"
 typing-extensions = ">= 4.7.1"
 

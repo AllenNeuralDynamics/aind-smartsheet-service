@@ -35,7 +35,7 @@ configuration = aind_smartsheet_service_async_client.Configuration(
 
 
 # Enter a context with an instance of the API client
-with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
+async with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_smartsheet_service_async_client.DefaultApi(api_client)
     project_name = 'Discovery-Neuromodulator circuit dynamics during foraging' # str |  (optional)
@@ -43,7 +43,7 @@ with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client
 
     try:
         # Get Funding
-        api_response = api_instance.get_funding(project_name=project_name, subproject=subproject)
+        api_response = await api_instance.get_funding(project_name=project_name, subproject=subproject)
         print("The response of DefaultApi->get_funding:\n")
         pprint(api_response)
     except Exception as e:
@@ -107,14 +107,14 @@ configuration = aind_smartsheet_service_async_client.Configuration(
 
 
 # Enter a context with an instance of the API client
-with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
+async with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_smartsheet_service_async_client.DefaultApi(api_client)
     subject_id = '689418' # str |  (optional)
 
     try:
         # Get Perfusions
-        api_response = api_instance.get_perfusions(subject_id=subject_id)
+        api_response = await api_instance.get_perfusions(subject_id=subject_id)
         print("The response of DefaultApi->get_perfusions:\n")
         pprint(api_response)
     except Exception as e:
@@ -176,13 +176,13 @@ configuration = aind_smartsheet_service_async_client.Configuration(
 
 
 # Enter a context with an instance of the API client
-with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
+async with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_smartsheet_service_async_client.DefaultApi(api_client)
 
     try:
         # Get Project Names
-        api_response = api_instance.get_project_names()
+        api_response = await api_instance.get_project_names()
         print("The response of DefaultApi->get_project_names:\n")
         pprint(api_response)
     except Exception as e:
@@ -241,14 +241,14 @@ configuration = aind_smartsheet_service_async_client.Configuration(
 
 
 # Enter a context with an instance of the API client
-with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
+async with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_smartsheet_service_async_client.DefaultApi(api_client)
     protocol_name = 'Tetrahydrofuran and Dichloromethane Delipidation of a Whole Mouse Brain' # str |  (optional)
 
     try:
         # Get Protocols
-        api_response = api_instance.get_protocols(protocol_name=protocol_name)
+        api_response = await api_instance.get_protocols(protocol_name=protocol_name)
         print("The response of DefaultApi->get_protocols:\n")
         pprint(api_response)
     except Exception as e:
