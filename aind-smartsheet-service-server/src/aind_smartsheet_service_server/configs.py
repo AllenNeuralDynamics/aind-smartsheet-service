@@ -32,6 +32,12 @@ class Settings(ParameterStoreAppBaseSettings):
     protocols_id: int = Field(
         ..., description="SmartSheet ID of protocols info"
     )
+    redis_url: Optional[str] = Field(default=None)
     model_config = SettingsConfigDict(
         env_prefix="SMARTSHEET_", case_sensitive=False
     )
+
+
+def get_settings() -> Settings:
+    """Return a settings object"""
+    return Settings()

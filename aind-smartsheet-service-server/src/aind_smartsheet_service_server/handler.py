@@ -1,46 +1,133 @@
 """Module to handle smartsheet api responses"""
 
-from typing import Any, List, Optional, Type
+from typing import Any, Dict, List, Optional, Type, TypeVar
 
-from aind_smartsheet_api.client import SmartsheetClient
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from aind_smartsheet_service_server.models import (
     FundingModel,
     PerfusionsModel,
     ProtocolsModel,
+    SheetFields,
+    SheetRow,
 )
+
+T = TypeVar("T", bound=BaseModel)
 
 
 class SessionHandler:
     """Handle session object to get data"""
 
-    def __init__(self, session: SmartsheetClient):
+    def __init__(self, raw_sheet: str):
         """Class constructor"""
-        self.session = session
+        self.raw_sheet = raw_sheet
 
-    def get_parsed_sheet(
-        self, sheet_id: int, model: Type[BaseModel]
-    ) -> List[Any]:
+    def get_sheet_fields(self) -> SheetFields:
         """
-        Converts the rows in a Smart Sheet into a Pydantic model
+        Returns
+        -------
+        SheetFields
+
+        """
+        return SheetFields.model_validate_json(self.raw_sheet)
+
+    @staticmethod
+    def _column_id_map(sheet_fields: SheetFields) -> Dict[int, str]:
+        """
+        SmartSheet uses integer ids for the columns. We need a way to
+        map the column titles to the ids so we can retrieve information using
+        just the titles.
         Parameters
         ----------
-        sheet_id : int
-          ID number of smart sheet
-        model : Type[BaseModel]
-          Pydantic model to parse the sheet to
+        sheet_fields : SheetFields
 
         Returns
         -------
-        List[Any]
-          A list of Pydantic models
+        Dict[int, str]
 
         """
-        sheet = self.session.get_parsed_sheet_model(
-            sheet_id=sheet_id, model=model, validate=False
-        )
-        return sheet
+        return {c.id: c.title for c in sheet_fields.columns}
+
+    @staticmethod
+    def _map_row_to_dict(
+        row: SheetRow, column_id_map: Dict[int, str]
+    ) -> Dict[str, Any]:
+        """
+        Maps a row into a dictionary that maps the column names to their values
+        Parameters
+        ----------
+        row : SheetRow
+          A SheetRow that will be parsed. This a list of cells with a columnId
+          and a cell value.
+        column_id_map: Dict[int, str]
+          Map of column ids into the column names
+
+        Returns
+        -------
+        Dict[str, Any]
+          The list of row cells is converted to a dictionary.
+
+        """
+        output_dict = {}
+        for cell in row.cells:
+            column_id = cell.columnId
+            column_name = column_id_map[column_id]
+            output_dict[column_name] = cell.value
+        return output_dict
+
+    def get_parsed_sheet(self) -> List[Dict[str, Any]]:
+        """
+
+        Returns
+        -------
+        List[Dict[str, Any]]
+
+        """
+
+        sheet_fields = self.get_sheet_fields()
+        column_id_map = self._column_id_map(sheet_fields=sheet_fields)
+        parsed_rows = list()
+        for row in sheet_fields.rows:
+            row_dict = self._map_row_to_dict(row, column_id_map=column_id_map)
+            parsed_rows.append(row_dict)
+        return parsed_rows
+
+    def get_parsed_sheet_model(
+        self, model: Type[T], validate: bool = True
+    ) -> List[T]:
+        """
+        Parse raw sheet json into basic dictionary of {"name": "value"}
+        Parameters
+        ----------
+        model : T
+          BaseModel type
+        validate : bool
+          If set to True, will raise errors if pydantic validation fails.
+          If set to False, will use model_construct in places where validation
+          fails. Default is True.
+
+        Returns
+        -------
+        List[T]
+
+        """
+
+        sheet_fields = self.get_sheet_fields()
+        column_id_map = self._column_id_map(sheet_fields=sheet_fields)
+        parsed_rows = list()
+        for row in sheet_fields.rows:
+            row_dict = self._map_row_to_dict(row, column_id_map=column_id_map)
+            try:
+                row_as_model = model.model_validate(row_dict)
+                parsed_rows.append(row_as_model)
+
+            except ValidationError as e:
+                if validate:
+                    raise e
+                else:
+                    row_as_model = model.model_construct(**row_dict)
+                    parsed_rows.append(row_as_model)
+        return parsed_rows
 
     @staticmethod
     def get_project_funding_info(

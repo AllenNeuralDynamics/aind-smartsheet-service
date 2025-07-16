@@ -3,7 +3,10 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Query, status
+from fastapi_cache.decorator import cache
+from smartsheet import Smartsheet
 
+from aind_smartsheet_service_server.configs import Settings, get_settings
 from aind_smartsheet_service_server.handler import SessionHandler
 from aind_smartsheet_service_server.models import (
     FundingModel,
@@ -11,12 +14,32 @@ from aind_smartsheet_service_server.models import (
     PerfusionsModel,
     ProtocolsModel,
 )
-from aind_smartsheet_service_server.session import (
-    SmartsheetClient,
-    get_session,
-)
 
 router = APIRouter()
+
+
+@cache(expire=120)
+async def get_smartsheet(settings: Settings, sheet_id: int) -> str:
+    """
+    Download and cache smartsheet object as a json string.
+    Parameters
+    ----------
+    settings : Settings
+    sheet_id : int
+
+    Returns
+    -------
+    str
+
+    """
+
+    client = Smartsheet(
+        user_agent=settings.user_agent,
+        max_connections=settings.max_connections,
+        access_token=(settings.access_token.get_secret_value()),
+    )
+    sheet = client.Sheets.get_sheet(sheet_id)
+    return sheet.to_json()
 
 
 @router.get(
@@ -27,7 +50,7 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     response_model=HealthCheck,
 )
-async def get_health() -> HealthCheck:
+def get_health() -> HealthCheck:
     """
     ## Endpoint to perform a healthcheck on.
 
@@ -41,7 +64,8 @@ async def get_health() -> HealthCheck:
     "/funding",
     response_model=List[FundingModel],
 )
-def get_funding(
+async def get_funding(
+    settings: Settings = Depends(get_settings),
     project_name: Optional[str] = Query(
         default=None,
         openapi_examples={
@@ -63,44 +87,38 @@ def get_funding(
             }
         },
     ),
-    session: SmartsheetClient = Depends(get_session),
 ):
     """
     ## Funding
     Returns funding information for a project_name and subproject.
     """
-    handler = SessionHandler(session=session)
-    #  TODO: Cache sheet in redis
-    sheet: List[FundingModel] = handler.get_parsed_sheet(
-        sheet_id=session.smartsheet_settings.sheet_id_map["funding"],
-        model=FundingModel,
+
+    sheet_id = settings.funding_id
+    raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
+    handler = SessionHandler(raw_sheet=raw_sheet)
+    parsed_sheet = handler.get_parsed_sheet_model(model=FundingModel)
+    funding_models = handler.get_project_funding_info(
+        sheet_model=parsed_sheet,
+        project_name=project_name,
+        subproject=subproject,
     )
-    content = SessionHandler(session=session).get_project_funding_info(
-        sheet_model=sheet, project_name=project_name, subproject=subproject
-    )
-    return content
+    return funding_models
 
 
 @router.get(
     "/project_names",
     response_model=List[str],
 )
-def get_project_names(
-    session: SmartsheetClient = Depends(get_session),
-):
+async def get_project_names(settings: Settings = Depends(get_settings)):
     """
     ## Project Names
     Returns a list of project names.
     """
-    handler = SessionHandler(session=session)
-    #  TODO: Cache sheet in redis
-    sheet: List[FundingModel] = handler.get_parsed_sheet(
-        sheet_id=session.smartsheet_settings.sheet_id_map["funding"],
-        model=FundingModel,
-    )
-    content = SessionHandler(session=session).get_project_names(
-        sheet_model=sheet
-    )
+    sheet_id = settings.funding_id
+    raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
+    handler = SessionHandler(raw_sheet=raw_sheet)
+    parsed_sheet = handler.get_parsed_sheet_model(model=FundingModel)
+    content = handler.get_project_names(sheet_model=parsed_sheet)
     return content
 
 
@@ -108,7 +126,7 @@ def get_project_names(
     "/protocols",
     response_model=List[ProtocolsModel],
 )
-def get_protocols(
+async def get_protocols(
     protocol_name: Optional[str] = Query(
         default=None,
         openapi_examples={
@@ -122,20 +140,18 @@ def get_protocols(
             }
         },
     ),
-    session: SmartsheetClient = Depends(get_session),
+    settings: Settings = Depends(get_settings),
 ):
     """
     ## Protocols
     Returns protocols given a name.
     """
-    handler = SessionHandler(session=session)
-    #  TODO: Cache sheet in redis
-    sheet: List[ProtocolsModel] = handler.get_parsed_sheet(
-        sheet_id=session.smartsheet_settings.sheet_id_map["protocols"],
-        model=ProtocolsModel,
-    )
-    content = SessionHandler(session=session).get_protocols_info(
-        sheet_model=sheet, protocol_name=protocol_name
+    sheet_id = settings.protocols_id
+    raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
+    handler = SessionHandler(raw_sheet=raw_sheet)
+    parsed_sheet = handler.get_parsed_sheet_model(model=ProtocolsModel)
+    content = handler.get_protocols_info(
+        sheet_model=parsed_sheet, protocol_name=protocol_name
     )
     return content
 
@@ -144,7 +160,7 @@ def get_protocols(
     "/perfusions",
     response_model=List[PerfusionsModel],
 )
-def get_perfusions(
+async def get_perfusions(
     subject_id: Optional[str] = Query(
         default=None,
         openapi_examples={
@@ -155,19 +171,17 @@ def get_perfusions(
             }
         },
     ),
-    session: SmartsheetClient = Depends(get_session),
+    settings: Settings = Depends(get_settings),
 ):
     """
     ## Perfusions
     Returns perfusions for a given subject_id.
     """
-    handler = SessionHandler(session=session)
-    # TODO: Cache sheet in redis
-    sheet: List[PerfusionsModel] = handler.get_parsed_sheet(
-        sheet_id=session.smartsheet_settings.sheet_id_map["perfusions"],
-        model=PerfusionsModel,
-    )
-    content = SessionHandler(session=session).get_perfusions_info(
-        sheet_model=sheet, subject_id=subject_id
+    sheet_id = settings.perfusions_id
+    raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
+    handler = SessionHandler(raw_sheet=raw_sheet)
+    parsed_sheet = handler.get_parsed_sheet_model(model=PerfusionsModel)
+    content = handler.get_perfusions_info(
+        sheet_model=parsed_sheet, subject_id=subject_id
     )
     return content
