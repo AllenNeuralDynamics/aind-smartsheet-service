@@ -1,5 +1,6 @@
 """Module to handle endpoint responses"""
 
+from asyncio import to_thread
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Query, status
@@ -7,7 +8,7 @@ from fastapi_cache.decorator import cache
 from smartsheet import Smartsheet
 
 from aind_smartsheet_service_server.configs import Settings, get_settings
-from aind_smartsheet_service_server.handler import SessionHandler
+from aind_smartsheet_service_server.handler import SheetHandler
 from aind_smartsheet_service_server.models import (
     FundingModel,
     HealthCheck,
@@ -38,7 +39,7 @@ async def get_smartsheet(settings: Settings, sheet_id: int) -> str:
         max_connections=settings.max_connections,
         access_token=(settings.access_token.get_secret_value()),
     )
-    sheet = client.Sheets.get_sheet(sheet_id)
+    sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
     return sheet.to_json()
 
 
@@ -95,10 +96,8 @@ async def get_funding(
 
     sheet_id = settings.funding_id
     raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
-    handler = SessionHandler(raw_sheet=raw_sheet)
-    parsed_sheet = handler.get_parsed_sheet_model(model=FundingModel)
+    handler = SheetHandler(raw_sheet=raw_sheet)
     funding_models = handler.get_project_funding_info(
-        sheet_model=parsed_sheet,
         project_name=project_name,
         subproject=subproject,
     )
@@ -116,9 +115,8 @@ async def get_project_names(settings: Settings = Depends(get_settings)):
     """
     sheet_id = settings.funding_id
     raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
-    handler = SessionHandler(raw_sheet=raw_sheet)
-    parsed_sheet = handler.get_parsed_sheet_model(model=FundingModel)
-    content = handler.get_project_names(sheet_model=parsed_sheet)
+    handler = SheetHandler(raw_sheet=raw_sheet)
+    content = handler.get_project_names()
     return content
 
 
@@ -148,11 +146,8 @@ async def get_protocols(
     """
     sheet_id = settings.protocols_id
     raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
-    handler = SessionHandler(raw_sheet=raw_sheet)
-    parsed_sheet = handler.get_parsed_sheet_model(model=ProtocolsModel)
-    content = handler.get_protocols_info(
-        sheet_model=parsed_sheet, protocol_name=protocol_name
-    )
+    handler = SheetHandler(raw_sheet=raw_sheet)
+    content = handler.get_protocols_info(protocol_name=protocol_name)
     return content
 
 
@@ -179,9 +174,6 @@ async def get_perfusions(
     """
     sheet_id = settings.perfusions_id
     raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
-    handler = SessionHandler(raw_sheet=raw_sheet)
-    parsed_sheet = handler.get_parsed_sheet_model(model=PerfusionsModel)
-    content = handler.get_perfusions_info(
-        sheet_model=parsed_sheet, subject_id=subject_id
-    )
+    handler = SheetHandler(raw_sheet=raw_sheet)
+    content = handler.get_perfusions_info(subject_id=subject_id)
     return content

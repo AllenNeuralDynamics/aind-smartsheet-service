@@ -6,11 +6,11 @@ import unittest
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from typing import Optional
 
-from aind_smartsheet_api.client import SmartsheetClient, SmartsheetSettings
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
-from aind_smartsheet_service_server.handler import SessionHandler
+from aind_smartsheet_service_server.handler import SheetHandler
 from aind_smartsheet_service_server.models import (
     FundingModel,
     PerfusionsModel,
@@ -22,6 +22,29 @@ RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 
 class TestSessionHandler(unittest.TestCase):
     """Test methods in SessionHandler Class"""
+
+    class MockSheetModel1(BaseModel):
+        """Mocked class to hold sheet model with all valid fields for mocked
+        sheet contents"""
+
+        project_name: Optional[str] = Field(None, alias="Project Name")
+        project_code: str = Field(..., alias="Project Code")
+        funding_institution: str = Field(..., alias="Funding Institution")
+        grant_number: Optional[str] = Field(None, alias="Grant Number")
+        investigators: str = Field(..., alias="Investigators")
+        model_config = ConfigDict(populate_by_name=True)
+
+    class MockSheetModel2(BaseModel):
+        """Mocked class to hold sheet model with some invalid fields for
+        mocked sheet contents"""
+
+        project_name: str = Field(..., alias="Project Name")
+        project_code: str = Field(..., alias="Project Code")
+        funding_institution: str = Field(..., alias="Funding Institution")
+        # Some grant numbers are None, so this will be invalid
+        grant_number: str = Field(..., alias="Grant Number")
+        investigators: str = Field(..., alias="Investigators")
+        model_config = ConfigDict(populate_by_name=True)
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -36,9 +59,13 @@ class TestSessionHandler(unittest.TestCase):
         with open(RESOURCES_DIR / "protocols.json", "r") as f:
             protocols_response = json.load(f)
 
+        with open(RESOURCES_DIR / "example_sheet.json", "r") as f:
+            example_sheet_response = json.load(f)
+
         cls.funding_response = json.dumps(funding_response)
         cls.perfusions_response = json.dumps(perfusions_response)
         cls.protocols_response = json.dumps(protocols_response)
+        cls.example_sheet_response = json.dumps(example_sheet_response)
 
         discovery_project = (
             "Discovery-Neuromodulator circuit dynamics during foraging"
@@ -240,60 +267,159 @@ class TestSessionHandler(unittest.TestCase):
             ProtocolsModel(),
         ]
 
-        test_client = SmartsheetClient(
-            smartsheet_settings=SmartsheetSettings(access_token="abc-123")
-        )
-        cls.test_handler = SessionHandler(session=test_client)
+    def test_column_id_map(self):
+        """Tests _column_id_map method"""
 
-    @patch("aind_smartsheet_api.client.SmartsheetClient.get_raw_sheet")
-    def test_get_funding_sheet(self, mock_get_raw_sheet: MagicMock):
-        """Tests get_parsed_sheet method for funding"""
-        mock_get_raw_sheet.return_value = self.funding_response
-        parsed_sheet = self.test_handler.get_parsed_sheet(
-            sheet_id=2802362280267652, model=FundingModel
-        )
-        self.assertEqual(self.expected_funding_sheet, parsed_sheet)
+        handler = SheetHandler(raw_sheet=self.example_sheet_response)
+        sheet_fields = handler._get_sheet_fields()
+        col_id_map = handler._column_id_map(sheet_fields=sheet_fields)
+        expected_col_id_map = {
+            3981351074090884: "Project Name",
+            1729551260405636: "Project Code",
+            2990791841501060: "Funding Institution",
+            3446515788894084: "Grant Number",
+            4825776004222852: "Investigators",
+        }
+        self.assertEqual(expected_col_id_map, col_id_map)
 
-    @patch("aind_smartsheet_api.client.SmartsheetClient.get_raw_sheet")
-    def test_get_perfusions_sheet(self, mock_get_raw_sheet: MagicMock):
-        """Tests get_parsed_sheet method for perfusions"""
-        mock_get_raw_sheet.return_value = self.perfusions_response
-        parsed_sheet = self.test_handler.get_parsed_sheet(
-            sheet_id=6224804269956, model=PerfusionsModel
+    def test_map_row_to_dict(self):
+        """Tests _map_row_to_dict method"""
+
+        handler = SheetHandler(raw_sheet=self.example_sheet_response)
+        sheet_fields = handler._get_sheet_fields()
+        col_id_map = handler._column_id_map(sheet_fields=sheet_fields)
+        first_row = sheet_fields.rows[0]
+        row_as_dict = handler._map_row_to_dict(
+            row=first_row, column_id_map=col_id_map
         )
+        expected_row_as_dict = {
+            "Project Name": "AIND Scientific Activities",
+            "Project Code": "122-01-001-10",
+            "Funding Institution": "Allen Institute",
+            "Grant Number": None,
+            "Investigators": "person.two@acme.org, J Smith, John Doe II",
+        }
+        self.assertEqual(expected_row_as_dict, row_as_dict)
+
+    def test_get_parsed_sheet_model_case_1(self):
+        """Tests get_parsed_sheet_model method with validate set to True and
+        no validation errors"""
+
+        handler = SheetHandler(raw_sheet=self.example_sheet_response)
+        parsed_sheet = handler._get_parsed_sheet_model(
+            model=self.MockSheetModel1
+        )
+        expected_output = [
+            self.MockSheetModel1(
+                project_name="AIND Scientific Activities",
+                project_code="122-01-001-10",
+                funding_institution="Allen Institute",
+                grant_number=None,
+                investigators="person.two@acme.org, J Smith, John Doe II",
+            ),
+            self.MockSheetModel1(
+                project_name=None,
+                project_code="122-01-001-10",
+                funding_institution="Allen Institute",
+                grant_number=None,
+                investigators="John Doe, person.one@acme.org",
+            ),
+            self.MockSheetModel1(
+                project_name="v1omFISH",
+                project_code="121-01-010-10",
+                funding_institution="Allen Institute",
+                grant_number=None,
+                investigators="person.one@acme.org, Jane Doe",
+            ),
+        ]
+        self.assertEqual(expected_output, parsed_sheet)
+
+    def test_get_parsed_sheet_model_case_2(self):
+        """Tests get_parsed_sheet_model method with validate set to True and
+        validation errors"""
+
+        handler = SheetHandler(raw_sheet=self.example_sheet_response)
+        with self.assertRaises(ValidationError):
+            handler._get_parsed_sheet_model(model=self.MockSheetModel2)
+
+    def test_get_parsed_sheet_model_case_3(self):
+        """Tests get_parsed_sheet_model method with validate set to False and
+        validation errors"""
+
+        handler = SheetHandler(
+            raw_sheet=self.example_sheet_response, validate=False
+        )
+        parsed_sheet = handler._get_parsed_sheet_model(
+            model=self.MockSheetModel2
+        )
+        expected_output = [
+            self.MockSheetModel2.model_construct(
+                project_name="AIND Scientific Activities",
+                project_code="122-01-001-10",
+                funding_institution="Allen Institute",
+                grant_number=None,
+                investigators="person.two@acme.org, J Smith, John Doe II",
+            ),
+            self.MockSheetModel2.model_construct(
+                project_name=None,
+                project_code="122-01-001-10",
+                funding_institution="Allen Institute",
+                grant_number=None,
+                investigators="John Doe, person.one@acme.org",
+            ),
+            self.MockSheetModel2.model_construct(
+                project_name="v1omFISH",
+                project_code="121-01-010-10",
+                funding_institution="Allen Institute",
+                grant_number=None,
+                investigators="person.one@acme.org, Jane Doe",
+            ),
+        ]
+        self.assertEqual(expected_output, parsed_sheet)
+
+    def test_get_protocols_info(self):
+        """Tests get_protocols_info method"""
+        handler = SheetHandler(raw_sheet=self.protocols_response)
+
+        parsed_sheet = handler.get_protocols_info()
+        self.assertEqual(self.expected_protocols_sheet, parsed_sheet)
+
+    def test_get_perfusions_sheet(self):
+        """Tests get_perfusions_info method"""
+        handler = SheetHandler(raw_sheet=self.perfusions_response)
+
+        parsed_sheet = handler.get_perfusions_info()
         self.assertEqual(self.expected_perfusions_sheet, parsed_sheet)
 
-    @patch("aind_smartsheet_api.client.SmartsheetClient.get_raw_sheet")
-    def test_get_protocols_sheet(self, mock_get_raw_sheet: MagicMock):
-        """Tests get_parsed_sheet method for protocols"""
-        mock_get_raw_sheet.return_value = self.protocols_response
-        parsed_sheet = self.test_handler.get_parsed_sheet(
-            sheet_id=7478444220698500, model=ProtocolsModel
-        )
-        self.assertEqual(self.expected_protocols_sheet, parsed_sheet)
+    def test_get_project_funding_info(self):
+        """Tests get_project_funding_info method"""
+        handler = SheetHandler(raw_sheet=self.funding_response)
+
+        parsed_sheet = handler.get_project_funding_info()
+        self.assertEqual(self.expected_funding_sheet, parsed_sheet)
 
     def test_get_project_funding_info_match(self):
         """Tests get_project_funding_info match"""
-
-        funding_info = self.test_handler.get_project_funding_info(
-            self.expected_funding_sheet, project_name="MSMA Platform"
+        handler = SheetHandler(raw_sheet=self.funding_response)
+        funding_info = handler.get_project_funding_info(
+            project_name="MSMA Platform"
         )
         self.assertEqual(self.expected_funding_sheet[2:3], funding_info)
 
     def test_get_project_funding_info_no_match(self):
         """Tests get_project_funding_info when no match"""
 
-        funding_info = self.test_handler.get_project_funding_info(
-            self.expected_funding_sheet, project_name="FAKE PROJECT"
+        handler = SheetHandler(raw_sheet=self.funding_response)
+        funding_info = handler.get_project_funding_info(
+            project_name="FAKE PROJECT"
         )
         self.assertEqual([], funding_info)
 
     def test_get_project_names(self):
         """Tests get_project_names"""
 
-        project_names = self.test_handler.get_project_names(
-            self.expected_funding_sheet,
-        )
+        handler = SheetHandler(raw_sheet=self.funding_response)
+        project_names = handler.get_project_names()
         expected_names = [
             (
                 "Discovery-Neuromodulator circuit dynamics during foraging"
@@ -313,39 +439,6 @@ class TestSessionHandler(unittest.TestCase):
             "MSMA Platform",
         ]
         self.assertEqual(expected_names, project_names)
-
-    def test_get_protocols_info_match(self):
-        """Tests get_protocols_info match"""
-
-        protocol_info = self.test_handler.get_protocols_info(
-            self.expected_protocols_sheet,
-            protocol_name="Immunolabeling of a Whole Mouse Brain",
-        )
-        self.assertEqual(self.expected_protocols_sheet[0:1], protocol_info)
-
-    def test_get_protocols_info_no_match(self):
-        """Tests get_protocols_info when no match"""
-
-        protocol_info = self.test_handler.get_protocols_info(
-            self.expected_protocols_sheet, protocol_name="FAKE PROTOCOL"
-        )
-        self.assertEqual([], protocol_info)
-
-    def test_get_perfusions_info_match(self):
-        """Tests get_perfusions_info match"""
-
-        perfusions_info = self.test_handler.get_perfusions_info(
-            self.expected_perfusions_sheet, subject_id="689418"
-        )
-        self.assertEqual(self.expected_perfusions_sheet[0:1], perfusions_info)
-
-    def test_get_perfusions_info_no_match(self):
-        """Tests get_perfusions_info when no match"""
-
-        perfusions_info = self.test_handler.get_perfusions_info(
-            self.expected_perfusions_sheet, subject_id="0"
-        )
-        self.assertEqual([], perfusions_info)
 
 
 if __name__ == "__main__":

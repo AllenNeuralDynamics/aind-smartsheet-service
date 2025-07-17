@@ -15,14 +15,15 @@ from aind_smartsheet_service_server.models import (
 T = TypeVar("T", bound=BaseModel)
 
 
-class SessionHandler:
-    """Handle session object to get data"""
+class SheetHandler:
+    """Handle raw sheet object"""
 
-    def __init__(self, raw_sheet: str):
+    def __init__(self, raw_sheet: str, validate: bool = True):
         """Class constructor"""
         self.raw_sheet = raw_sheet
+        self.validate = validate
 
-    def get_sheet_fields(self) -> SheetFields:
+    def _get_sheet_fields(self) -> SheetFields:
         """
         Returns
         -------
@@ -75,36 +76,13 @@ class SessionHandler:
             output_dict[column_name] = cell.value
         return output_dict
 
-    def get_parsed_sheet(self) -> List[Dict[str, Any]]:
-        """
-
-        Returns
-        -------
-        List[Dict[str, Any]]
-
-        """
-
-        sheet_fields = self.get_sheet_fields()
-        column_id_map = self._column_id_map(sheet_fields=sheet_fields)
-        parsed_rows = list()
-        for row in sheet_fields.rows:
-            row_dict = self._map_row_to_dict(row, column_id_map=column_id_map)
-            parsed_rows.append(row_dict)
-        return parsed_rows
-
-    def get_parsed_sheet_model(
-        self, model: Type[T], validate: bool = True
-    ) -> List[T]:
+    def _get_parsed_sheet_model(self, model: Type[T]) -> List[T]:
         """
         Parse raw sheet json into basic dictionary of {"name": "value"}
         Parameters
         ----------
         model : T
           BaseModel type
-        validate : bool
-          If set to True, will raise errors if pydantic validation fails.
-          If set to False, will use model_construct in places where validation
-          fails. Default is True.
 
         Returns
         -------
@@ -112,7 +90,7 @@ class SessionHandler:
 
         """
 
-        sheet_fields = self.get_sheet_fields()
+        sheet_fields = self._get_sheet_fields()
         column_id_map = self._column_id_map(sheet_fields=sheet_fields)
         parsed_rows = list()
         for row in sheet_fields.rows:
@@ -122,16 +100,15 @@ class SessionHandler:
                 parsed_rows.append(row_as_model)
 
             except ValidationError as e:
-                if validate:
+                if self.validate:
                     raise e
                 else:
                     row_as_model = model.model_construct(**row_dict)
                     parsed_rows.append(row_as_model)
         return parsed_rows
 
-    @staticmethod
     def get_project_funding_info(
-        sheet_model: List[FundingModel],
+        self,
         project_name: Optional[str] = None,
         subproject: Optional[str] = None,
     ) -> List[FundingModel]:
@@ -139,7 +116,6 @@ class SessionHandler:
         Filters funding sheet by specific project name
         Parameters
         ----------
-        sheet_model : List[FundingModel]
         project_name : str | None
         subproject : str | None
 
@@ -150,6 +126,7 @@ class SessionHandler:
           A list of all of that match the project name.
 
         """
+        sheet_model = self._get_parsed_sheet_model(model=FundingModel)
         filtered_rows = [
             r
             for r in sheet_model
@@ -161,20 +138,17 @@ class SessionHandler:
         ]
         return filtered_rows
 
-    @staticmethod
-    def get_project_names(sheet_model: List[FundingModel]) -> List[str]:
+    def get_project_names(self) -> List[str]:
         """
         Returns a sorted list of unique project names found in the Funding
         SmartSheet.
-        Parameters
-        ----------
-        sheet_model : List[FundingModel]
 
         Returns
         -------
         List[str]
 
         """
+        sheet_model = self._get_parsed_sheet_model(model=FundingModel)
         project_names = set()
         for funding_model in sheet_model:
             project_name = funding_model.project_name
@@ -186,15 +160,13 @@ class SessionHandler:
         sorted_names = sorted(list(set(project_names)))
         return sorted_names
 
-    @staticmethod
     def get_protocols_info(
-        sheet_model: List[ProtocolsModel], protocol_name: Optional[str] = None
+        self, protocol_name: Optional[str] = None
     ) -> List[ProtocolsModel]:
         """
         Filter protocols Smartsheet by protocols name
         Parameters
         ----------
-        sheet_model : List[ProtocolsModel]
         protocol_name : str | None
 
         Returns
@@ -204,6 +176,7 @@ class SessionHandler:
           A list of all of that match the project name.
 
         """
+        sheet_model = self._get_parsed_sheet_model(model=ProtocolsModel)
         filtered_rows = [
             r
             for r in sheet_model
@@ -211,15 +184,13 @@ class SessionHandler:
         ]
         return filtered_rows
 
-    @staticmethod
     def get_perfusions_info(
-        sheet_model: List[PerfusionsModel], subject_id: Optional[str] = None
+        self, subject_id: Optional[str] = None
     ) -> List[PerfusionsModel]:
         """
 
         Parameters
         ----------
-        sheet_model : List[PerfusionsModel]
         subject_id : str | None
 
         Returns
@@ -228,6 +199,7 @@ class SessionHandler:
           In the event that there are multiple project names, will return
           A list of all of that match the project name.
         """
+        sheet_model = self._get_parsed_sheet_model(model=PerfusionsModel)
         filtered_rows = [
             r
             for r in sheet_model

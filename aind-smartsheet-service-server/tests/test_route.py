@@ -1,24 +1,44 @@
 """Test routes"""
 
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock, call, patch
 
 import pytest
 from starlette.testclient import TestClient
 
+from aind_smartsheet_service_server.configs import Settings
+from aind_smartsheet_service_server.route import get_smartsheet
 
+
+@pytest.mark.asyncio
 class TestRoutes:
     """Test responses in route module."""
 
-    def test_get_health(self, client: TestClient):
+    async def test_get_health(self, client: TestClient):
         """Tests healthcheck route"""
         response = client.get("/healthcheck")
         assert 200 == response.status_code
         assert "OK" == response.json()["status"]
 
-    def test_get_200_funding(
-        self, client: TestClient, mock_get_raw_funding_sheet: MagicMock
+    @patch("smartsheet.sheets.Sheets.get_sheet")
+    async def test_get_smartsheet(self, mock_get_sheet: MagicMock):
+        """Tests get_access_token method"""
+        mock_sheet = MagicMock()
+        mock_sheet.to_json.return_value = '{"a": "b"}'
+        mock_get_sheet.return_value = mock_sheet
+        sheet = await get_smartsheet(settings=Settings(), sheet_id=0)
+        mock_get_sheet.assert_has_calls([call(0), call().to_json()])
+        assert '{"a": "b"}' == sheet
+
+    @patch("aind_smartsheet_service_server.route.get_smartsheet")
+    async def test_get_funding(
+        self,
+        mock_get_sheet: AsyncMock,
+        client: TestClient,
+        mock_raw_funding_sheet: str,
     ):
         """Tests a good response when fetching funding info"""
+
+        mock_get_sheet.return_value = mock_raw_funding_sheet
         project_name = (
             "Discovery-Neuromodulator circuit dynamics during foraging"
         )
@@ -55,10 +75,16 @@ class TestRoutes:
         assert 200 == response.status_code
         assert expected_response == response.json()
 
-    def test_get_200_project_names(
-        self, client: TestClient, mock_get_raw_funding_sheet: MagicMock
+    @patch("aind_smartsheet_service_server.route.get_smartsheet")
+    async def test_get_project_names(
+        self,
+        mock_get_sheet: AsyncMock,
+        client: TestClient,
+        mock_raw_funding_sheet: str,
     ):
         """Tests a good response when fetching project_names"""
+
+        mock_get_sheet.return_value = mock_raw_funding_sheet
         discovery_project = (
             "Discovery-Neuromodulator circuit dynamics during foraging"
         )
@@ -83,11 +109,16 @@ class TestRoutes:
         assert 200 == response.status_code
         assert expected_response == response.json()
 
-    def test_get_200_protocols(
-        self, client: TestClient, mock_get_raw_protocols_sheet: MagicMock
+    @patch("aind_smartsheet_service_server.route.get_smartsheet")
+    async def test_get_protocols(
+        self,
+        mock_get_sheet: AsyncMock,
+        client: TestClient,
+        mock_raw_protocols_sheet: str,
     ):
         """Tests a good response when fetching protocols"""
 
+        mock_get_sheet.return_value = mock_raw_protocols_sheet
         example_protocol = (
             "Tetrahydrofuran and Dichloromethane Delipidation of a Whole "
             "Mouse Brain"
@@ -106,10 +137,16 @@ class TestRoutes:
         assert 200 == response.status_code
         assert expected_response == response.json()
 
-    def test_get_200_perfusions(
-        self, client: TestClient, mock_get_raw_perfusions_sheet: MagicMock
+    @patch("aind_smartsheet_service_server.route.get_smartsheet")
+    async def test_get_perfusions(
+        self,
+        mock_get_sheet: AsyncMock,
+        client: TestClient,
+        mock_raw_perfusions_sheet: str,
     ):
         """Tests a good response when fetching perfusions info"""
+
+        mock_get_sheet.return_value = mock_raw_perfusions_sheet
 
         response = client.get("/perfusions?subject_id=689418")
         expected_response = [
