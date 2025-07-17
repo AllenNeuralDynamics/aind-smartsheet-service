@@ -5,7 +5,7 @@ from typing import Optional
 from aind_settings_utils.aws import (
     ParameterStoreAppBaseSettings,
 )
-from pydantic import Field, SecretStr
+from pydantic import Field, RedisDsn, SecretStr
 from pydantic_settings import SettingsConfigDict
 
 
@@ -32,7 +32,7 @@ class Settings(ParameterStoreAppBaseSettings):
     protocols_id: int = Field(
         ..., description="SmartSheet ID of protocols info"
     )
-    redis_url: Optional[str] = Field(default=None)
+    redis_url: Optional[RedisDsn] = Field(default=None)
     model_config = SettingsConfigDict(
         env_prefix="SMARTSHEET_", case_sensitive=False
     )
