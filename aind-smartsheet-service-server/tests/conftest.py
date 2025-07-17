@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
+from pydantic import RedisDsn
 
 from aind_smartsheet_service_server.configs import get_settings
 
@@ -63,7 +64,7 @@ def client_with_redis() -> Generator[TestClient, Any, None]:
 
     settings = get_settings()
     settings_with_redis = settings.model_copy(
-        update={"redis_url": "redis"}, deep=True
+        update={"redis_url": RedisDsn("redis://example.com:1234")}, deep=True
     )
     with (
         patch(
