@@ -18,10 +18,11 @@ dynamic = ["version"]
 
 dependencies = [
     'aind-settings-utils>=0.0.3',
-    'aind-smartsheet-api==0.2.0',
+    'smartsheet-python-sdk>=3.0',
     'pydantic>=2.0',
     'pydantic-settings>=2.0',
     'fastapi[standard]>=0.114.0',
+    'fastapi-cache2[redis]>=0.2.2',
 ]
 
 [project.optional-dependencies]
