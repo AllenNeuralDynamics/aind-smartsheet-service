@@ -34,7 +34,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Init cache and add to lifespan of app"""
     settings = get_settings()
     if settings.redis_url is not None:
-        redis = from_url(settings.redis_url)
+        redis = from_url(settings.redis_url.unicode_string())
         FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     else:
         FastAPICache.init(InMemoryBackend(), prefix="fastapi-cache")
