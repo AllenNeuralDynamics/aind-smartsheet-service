@@ -2,14 +2,12 @@
 
 from typing import Optional
 
-from aind_settings_utils.aws import (
-    ParameterStoreAppBaseSettings,
-)
+from aind_settings_utils.aws import SecretsManagerBaseSettings
 from pydantic import Field, RedisDsn, SecretStr
 from pydantic_settings import SettingsConfigDict
 
 
-class Settings(ParameterStoreAppBaseSettings):
+class Settings(SecretsManagerBaseSettings):
     """Smartsheet configs with client settings and sheet IDs"""
 
     access_token: SecretStr = Field(
@@ -33,11 +31,7 @@ class Settings(ParameterStoreAppBaseSettings):
         ..., description="SmartSheet ID of protocols info"
     )
     redis_url: Optional[RedisDsn] = Field(default=None)
-    model_config = SettingsConfigDict(
-        env_prefix="SMARTSHEET_", case_sensitive=False
-    )
+    model_config = SettingsConfigDict(env_prefix="SMARTSHEET_")
 
 
-def get_settings() -> Settings:
-    """Return a settings object"""
-    return Settings()
+settings = Settings()
