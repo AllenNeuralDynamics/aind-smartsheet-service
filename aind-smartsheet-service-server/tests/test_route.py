@@ -5,7 +5,6 @@ from unittest.mock import AsyncMock, MagicMock, call, patch
 import pytest
 from starlette.testclient import TestClient
 
-from aind_smartsheet_service_server.configs import Settings
 from aind_smartsheet_service_server.route import get_smartsheet
 
 
@@ -25,7 +24,7 @@ class TestRoutes:
         mock_sheet = MagicMock()
         mock_sheet.to_json.return_value = '{"a": "b"}'
         mock_get_sheet.return_value = mock_sheet
-        sheet = await get_smartsheet(settings=Settings(), sheet_id=0)
+        sheet = await get_smartsheet(sheet_id=0)
         mock_get_sheet.assert_has_calls([call(0), call().to_json()])
         assert '{"a": "b"}' == sheet
 

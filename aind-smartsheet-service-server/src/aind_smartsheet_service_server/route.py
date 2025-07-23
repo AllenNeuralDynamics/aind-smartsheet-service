@@ -3,11 +3,11 @@
 from asyncio import to_thread
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Query, status
 from fastapi_cache.decorator import cache
 from smartsheet import Smartsheet
 
-from aind_smartsheet_service_server.configs import Settings, get_settings
+from aind_smartsheet_service_server.configs import settings
 from aind_smartsheet_service_server.handler import SheetHandler
 from aind_smartsheet_service_server.models import (
     FundingModel,
@@ -20,12 +20,11 @@ router = APIRouter()
 
 
 @cache(expire=120)
-async def get_smartsheet(settings: Settings, sheet_id: int) -> str:
+async def get_smartsheet(sheet_id: int) -> str:
     """
     Download and cache smartsheet object as a json string.
     Parameters
     ----------
-    settings : Settings
     sheet_id : int
 
     Returns
@@ -66,7 +65,6 @@ def get_health() -> HealthCheck:
     response_model=List[FundingModel],
 )
 async def get_funding(
-    settings: Settings = Depends(get_settings),
     project_name: Optional[str] = Query(
         default=None,
         openapi_examples={
@@ -95,7 +93,7 @@ async def get_funding(
     """
 
     sheet_id = settings.funding_id
-    raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
+    raw_sheet = await get_smartsheet(sheet_id=sheet_id)
     handler = SheetHandler(raw_sheet=raw_sheet)
     funding_models = handler.get_project_funding_info(
         project_name=project_name,
@@ -108,13 +106,13 @@ async def get_funding(
     "/project_names",
     response_model=List[str],
 )
-async def get_project_names(settings: Settings = Depends(get_settings)):
+async def get_project_names():
     """
     ## Project Names
     Returns a list of project names.
     """
     sheet_id = settings.funding_id
-    raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
+    raw_sheet = await get_smartsheet(sheet_id=sheet_id)
     handler = SheetHandler(raw_sheet=raw_sheet)
     content = handler.get_project_names()
     return content
@@ -137,15 +135,14 @@ async def get_protocols(
                 ),
             }
         },
-    ),
-    settings: Settings = Depends(get_settings),
+    )
 ):
     """
     ## Protocols
     Returns protocols given a name.
     """
     sheet_id = settings.protocols_id
-    raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
+    raw_sheet = await get_smartsheet(sheet_id=sheet_id)
     handler = SheetHandler(raw_sheet=raw_sheet)
     content = handler.get_protocols_info(protocol_name=protocol_name)
     return content
@@ -165,15 +162,14 @@ async def get_perfusions(
                 "value": "689418",
             }
         },
-    ),
-    settings: Settings = Depends(get_settings),
+    )
 ):
     """
     ## Perfusions
     Returns perfusions for a given subject_id.
     """
     sheet_id = settings.perfusions_id
-    raw_sheet = await get_smartsheet(settings=settings, sheet_id=sheet_id)
+    raw_sheet = await get_smartsheet(sheet_id=sheet_id)
     handler = SheetHandler(raw_sheet=raw_sheet)
     content = handler.get_perfusions_info(subject_id=subject_id)
     return content

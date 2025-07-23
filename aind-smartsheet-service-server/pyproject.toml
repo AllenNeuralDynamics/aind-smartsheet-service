@@ -17,7 +17,7 @@ readme = "README.md"
 dynamic = ["version"]
 
 dependencies = [
-    'aind-settings-utils>=0.0.3',
+    'aind-settings-utils>=0.1.0',
     'smartsheet-python-sdk>=3.0',
     'pydantic>=2.0',
     'pydantic-settings>=2.0',
