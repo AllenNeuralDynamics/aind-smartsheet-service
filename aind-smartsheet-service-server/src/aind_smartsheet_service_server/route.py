@@ -3,7 +3,7 @@
 from asyncio import to_thread
 from typing import List, Optional
 
-from fastapi import APIRouter, Query, status
+from fastapi import APIRouter, HTTPException, Query, status
 from fastapi_cache.decorator import cache
 from smartsheet import Smartsheet
 
@@ -32,14 +32,18 @@ async def get_smartsheet(sheet_id: int) -> str:
     str
 
     """
-
-    client = Smartsheet(
-        user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
-        access_token=(settings.access_token.get_secret_value()),
-    )
-    sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
-    return sheet.to_json()
+    try:
+        client = Smartsheet(
+            user_agent=settings.user_agent,
+            max_connections=settings.max_connections,
+            access_token=(settings.access_token.get_secret_value()),
+        )
+        sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
+        return sheet.to_json()
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching sheet: {e}"
+        )
 
 
 @router.get(

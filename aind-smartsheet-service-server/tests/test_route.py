@@ -3,6 +3,7 @@
 from unittest.mock import AsyncMock, MagicMock, call, patch
 
 import pytest
+from fastapi import HTTPException
 from starlette.testclient import TestClient
 
 from aind_smartsheet_service_server.route import get_smartsheet
@@ -27,6 +28,14 @@ class TestRoutes:
         sheet = await get_smartsheet(sheet_id=0)
         mock_get_sheet.assert_has_calls([call(0), call().to_json()])
         assert '{"a": "b"}' == sheet
+
+    @patch("smartsheet.sheets.Sheets.get_sheet")
+    async def test_get_smartsheet_fail(self, mock_get_sheet: MagicMock):
+        """Tests that get_smartsheet handles invalid smartsheet responses"""
+        mock_get_sheet.side_effect = Exception
+        with pytest.raises(HTTPException) as e:
+            _ = await get_smartsheet(sheet_id=0)
+        assert "Error fetching sheet" in str(e.value)
 
     @patch("aind_smartsheet_service_server.route.get_smartsheet")
     async def test_get_funding(
