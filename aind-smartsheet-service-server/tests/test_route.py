@@ -26,16 +26,34 @@ class TestRoutes:
         mock_sheet.to_json.return_value = '{"a": "b"}'
         mock_get_sheet.return_value = mock_sheet
         sheet = await get_smartsheet(sheet_id=0)
-        mock_get_sheet.assert_has_calls([call(0), call().to_json()])
+        mock_get_sheet.assert_called_once_with(0)
+        mock_sheet.to_json.assert_called_once()
         assert '{"a": "b"}' == sheet
 
     @patch("smartsheet.sheets.Sheets.get_sheet")
     async def test_get_smartsheet_fail(self, mock_get_sheet: MagicMock):
-        """Tests that get_smartsheet handles invalid smartsheet responses"""
+        """Tests that get_smartsheet handles exceptions"""
         mock_get_sheet.side_effect = Exception
         with pytest.raises(HTTPException) as e:
             _ = await get_smartsheet(sheet_id=0)
         assert "Error fetching sheet" in str(e.value)
+
+    @patch("smartsheet.sheets.Sheets.get_sheet")
+    async def test_get_smartsheet_error_payload(
+        self, mock_get_sheet: MagicMock
+    ):
+        """Tests that get_smartsheet raises HTTPException for
+        Smartsheet API errors"""
+        mock_sheet = MagicMock()
+        mock_sheet.to_dict.return_value = {
+            "result": {"statusCode": 404, "message": "Not Found"}
+        }
+        mock_get_sheet.return_value = mock_sheet
+
+        with pytest.raises(HTTPException) as e:
+            await get_smartsheet(sheet_id=0)
+        assert e.value.status_code == 404
+        assert "Not Found" in str(e.value.detail)
 
     @patch("aind_smartsheet_service_server.route.get_smartsheet")
     async def test_get_funding(

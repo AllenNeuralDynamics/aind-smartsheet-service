@@ -31,6 +31,9 @@ async def get_smartsheet(sheet_id: int) -> str:
     -------
     str
 
+    Raises
+    ------
+    HTTPException
     """
     try:
         client = Smartsheet(
@@ -39,7 +42,18 @@ async def get_smartsheet(sheet_id: int) -> str:
             access_token=(settings.access_token.get_secret_value()),
         )
         sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
+
+        sheet_dict = sheet.to_dict()
+        if "result" in sheet_dict and "statusCode" in sheet_dict["result"]:
+            status = sheet_dict["result"]["statusCode"]
+            message = sheet_dict["result"].get("message", "Smartsheet error")
+            raise HTTPException(status_code=status, detail=message)
+
         return sheet.to_json()
+
+    except HTTPException:
+        raise
+
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Error fetching sheet: {e}"
