@@ -1,9 +1,10 @@
 """Test routes"""
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, call, patch
 
 import pytest
 from fastapi import HTTPException
+from smartsheet.models.error import Error as SmartsheetError
 from starlette.testclient import TestClient
 
 from aind_smartsheet_service_server.route import get_smartsheet
@@ -26,32 +27,28 @@ class TestRoutes:
         mock_sheet.to_json.return_value = '{"a": "b"}'
         mock_get_sheet.return_value = mock_sheet
         sheet = await get_smartsheet(sheet_id=0)
-        mock_get_sheet.assert_called_once_with(0)
-        mock_sheet.to_json.assert_called_once()
+        mock_get_sheet.assert_has_calls([call(0), call().to_json()])
         assert '{"a": "b"}' == sheet
 
     @patch("smartsheet.sheets.Sheets.get_sheet")
     async def test_get_smartsheet_fail(self, mock_get_sheet: MagicMock):
-        """Tests that get_smartsheet handles exceptions"""
-        mock_get_sheet.side_effect = Exception
-        with pytest.raises(HTTPException) as e:
+        """Tests generic exception handling"""
+        mock_get_sheet.side_effect = Exception("Fail")
+        with pytest.raises(Exception) as e:
             _ = await get_smartsheet(sheet_id=0)
-        assert "Error fetching sheet" in str(e.value)
+        assert "Fail" in str(e.value)
 
     @patch("smartsheet.sheets.Sheets.get_sheet")
-    async def test_get_smartsheet_error_payload(
-        self, mock_get_sheet: MagicMock
-    ):
-        """Tests that get_smartsheet raises HTTPException for
-        Smartsheet API errors"""
-        mock_sheet = MagicMock()
-        mock_sheet.to_dict.return_value = {
-            "result": {"statusCode": 404, "message": "Not Found"}
-        }
-        mock_get_sheet.return_value = mock_sheet
+    async def test_get_smartsheet_error(self, mock_get_sheet: MagicMock):
+        """Tests SmartsheetError triggers HTTPException"""
+        error_obj = SmartsheetError(MagicMock())
+        error_obj.result = MagicMock()
+        error_obj.result.status_code = 404
+        error_obj.result.message = "Not Found"
+        mock_get_sheet.return_value = error_obj
 
         with pytest.raises(HTTPException) as e:
-            await get_smartsheet(sheet_id=0)
+            _ = await get_smartsheet(sheet_id=0)
         assert e.value.status_code == 404
         assert "Not Found" in str(e.value.detail)
 
