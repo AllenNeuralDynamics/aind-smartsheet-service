@@ -6,6 +6,7 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Query, status
 from fastapi_cache.decorator import cache
 from smartsheet import Smartsheet
+from smartsheet.models.error import Error as SmartsheetError
 
 from aind_smartsheet_service_server.configs import settings
 from aind_smartsheet_service_server.handler import SheetHandler
@@ -29,36 +30,22 @@ async def get_smartsheet(sheet_id: int) -> str:
 
     Returns
     -------
-    str
-
-    Raises
-    ------
-    HTTPException
+    str or raises Exception
     """
-    try:
-        client = Smartsheet(
-            user_agent=settings.user_agent,
-            max_connections=settings.max_connections,
-            access_token=(settings.access_token.get_secret_value()),
-        )
-        sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
 
-        sheet_dict = sheet.to_dict()
-        if "result" in sheet_dict and "statusCode" in sheet_dict["result"]:
-            status = sheet_dict["result"]["statusCode"]
-            message = sheet_dict["result"].get("message", "Smartsheet error")
-            raise HTTPException(status_code=status, detail=message)
+    client = Smartsheet(
+        user_agent=settings.user_agent,
+        max_connections=settings.max_connections,
+        access_token=(settings.access_token.get_secret_value()),
+    )
+    sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
 
-        return sheet.to_json()
+    if isinstance(sheet, SmartsheetError):
+        status = sheet.result.status_code
+        message = sheet.result.message or "Smartsheet error"
+        raise HTTPException(status_code=status, detail=message)
 
-    except HTTPException:
-        raise
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Error fetching sheet: {e}"
-        )
-
+    return sheet.to_json()
 
 @router.get(
     "/healthcheck",
