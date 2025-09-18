@@ -47,6 +47,7 @@ async def get_smartsheet(sheet_id: int) -> str:
 
     return sheet.to_json()
 
+
 @router.get(
     "/healthcheck",
     tags=["healthcheck"],
