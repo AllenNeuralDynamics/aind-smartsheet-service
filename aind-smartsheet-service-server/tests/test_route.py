@@ -3,6 +3,8 @@
 from unittest.mock import AsyncMock, MagicMock, call, patch
 
 import pytest
+from fastapi import HTTPException
+from smartsheet.models.error import Error as SmartsheetError
 from starlette.testclient import TestClient
 
 from aind_smartsheet_service_server.route import get_smartsheet
@@ -27,6 +29,28 @@ class TestRoutes:
         sheet = await get_smartsheet(sheet_id=0)
         mock_get_sheet.assert_has_calls([call(0), call().to_json()])
         assert '{"a": "b"}' == sheet
+
+    @patch("smartsheet.sheets.Sheets.get_sheet")
+    async def test_get_smartsheet_fail(self, mock_get_sheet: MagicMock):
+        """Tests generic exception handling"""
+        mock_get_sheet.side_effect = Exception("Fail")
+        with pytest.raises(Exception) as e:
+            _ = await get_smartsheet(sheet_id=0)
+        assert "Fail" in str(e.value)
+
+    @patch("smartsheet.sheets.Sheets.get_sheet")
+    async def test_get_smartsheet_error(self, mock_get_sheet: MagicMock):
+        """Tests SmartsheetError triggers HTTPException"""
+        error_obj = SmartsheetError(MagicMock())
+        error_obj.result = MagicMock()
+        error_obj.result.status_code = 404
+        error_obj.result.message = "Not Found"
+        mock_get_sheet.return_value = error_obj
+
+        with pytest.raises(HTTPException) as e:
+            _ = await get_smartsheet(sheet_id=0)
+        assert e.value.status_code == 404
+        assert "Not Found" in str(e.value.detail)
 
     @patch("aind_smartsheet_service_server.route.get_smartsheet")
     async def test_get_funding(

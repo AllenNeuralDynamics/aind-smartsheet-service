@@ -3,9 +3,10 @@
 from asyncio import to_thread
 from typing import List, Optional
 
-from fastapi import APIRouter, Query, status
+from fastapi import APIRouter, HTTPException, Query, status
 from fastapi_cache.decorator import cache
 from smartsheet import Smartsheet
+from smartsheet.models.error import Error as SmartsheetError
 
 from aind_smartsheet_service_server.configs import settings
 from aind_smartsheet_service_server.handler import SheetHandler
@@ -29,8 +30,7 @@ async def get_smartsheet(sheet_id: int) -> str:
 
     Returns
     -------
-    str
-
+    str or raises Exception
     """
 
     client = Smartsheet(
@@ -39,6 +39,12 @@ async def get_smartsheet(sheet_id: int) -> str:
         access_token=(settings.access_token.get_secret_value()),
     )
     sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
+
+    if isinstance(sheet, SmartsheetError):
+        status = sheet.result.status_code
+        message = sheet.result.message or "Smartsheet error"
+        raise HTTPException(status_code=status, detail=message)
+
     return sheet.to_json()
 
 
