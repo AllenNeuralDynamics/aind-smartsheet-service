@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **project_code** | **str** |  | [optional] 
 **funding_institution** | **str** |  | [optional] 
 **grant_number** | **str** |  | [optional] 
-**fundees** | **str** |  | [optional] 
+**fundees__pi** | **str** |  | [optional] 
 **investigators** | **str** |  | [optional] 
 
 ## Example
