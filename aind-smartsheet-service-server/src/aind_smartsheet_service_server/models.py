@@ -104,7 +104,7 @@ class FundingModel(BaseModel):
         None, alias="Funding Institution"
     )
     grant_number: Optional[str] = Field(None, alias="Grant Number")
-    fundees: Optional[str] = Field(None, alias="Fundees")
+    fundees: Optional[str] = Field(None, alias="Fundees (PI)")
     investigators: Optional[str] = Field(None, alias="Investigators")
     model_config = ConfigDict(populate_by_name=True)
 

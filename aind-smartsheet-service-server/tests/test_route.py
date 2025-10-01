@@ -76,7 +76,7 @@ class TestRoutes:
                 "Project Code": "122-01-001-10",
                 "Funding Institution": "Allen Institute",
                 "Grant Number": None,
-                "Fundees": (
+                "Fundees (PI)": (
                     "Person Four, Person Five, Person Six, Person Seven,"
                     " Person Eight"
                 ),
@@ -88,7 +88,7 @@ class TestRoutes:
                 "Project Code": "122-01-020-20",
                 "Funding Institution": "NIMH",
                 "Grant Number": "1R01MH134833",
-                "Fundees": (
+                "Fundees (PI)": (
                     "Person Five, Person Nine, Person Ten, Person Seven,"
                     " Person Eleven"
                 ),
