@@ -2,7 +2,6 @@
 
 from datetime import date as date_type
 from datetime import datetime
-from decimal import Decimal
 from typing import Any, List, Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -97,45 +96,102 @@ class SheetFields(BaseModel):
 class FundingModel(BaseModel):
     """Expected model for the Funding Sheet"""
 
-    project_name: Optional[str] = Field(None, alias="Project Name")
-    subproject: Optional[str] = Field(None, alias="Subproject")
-    project_code: Optional[str] = Field(None, alias="Project Code")
-    funding_institution: Optional[str] = Field(
-        None, alias="Funding Institution"
+    project_name: str | None = Field(
+        default=None, title="Project Name", validation_alias="2802903489138564"
     )
-    grant_number: Optional[str] = Field(None, alias="Grant Number")
-    fundees: Optional[str] = Field(None, alias="Fundees (PI)")
-    investigators: Optional[str] = Field(None, alias="Investigators")
+    subproject: str | None = Field(
+        default=None, title="Subproject", validation_alias="3987940745367428"
+    )
+    project_code: str | None = Field(
+        default=None, title="Project Code", validation_alias="367734341717892"
+    )
+    funding_institution: str | None = Field(
+        default=None,
+        title="Funding Institution",
+        validation_alias="7306503116509060",
+    )
+    grant_number: str | None = Field(
+        default=None, title="Grant Number", validation_alias="8432403023351684"
+    )
+    fundees: str | None = Field(
+        default=None, title="Fundees (PI)", validation_alias="1114053628874628"
+    )
+    investigators: str | None = Field(
+        default=None,
+        title="Investigators",
+        validation_alias="5793496946659204",
+    )
     model_config = ConfigDict(populate_by_name=True)
 
 
 class PerfusionsModel(BaseModel):
     """Expected model for the Perfusions SmartSheet"""
 
-    subject_id: Optional[Decimal] = Field(None, alias="subject id")
-    date: Optional[date_type] = Field(None, alias="date")
-    experimenter: Optional[str] = Field(None, alias="experimenter")
-    iacuc_protocol: Optional[str] = Field(None, alias="iacuc protocol")
-    animal_weight_prior: Optional[Decimal] = Field(
-        None, alias="animal weight prior (g)"
+    subject_id: str | None = Field(
+        default=None, title="subject id", validation_alias="3203397935124356"
     )
-    output_specimen_id: Optional[Decimal] = Field(
-        None, alias="Output specimen id(s)"
+    date: date_type | None = Field(
+        default=None, title="date", validation_alias="7706997562494852"
     )
-    postfix_solution: Optional[str] = Field(None, alias="Postfix solution")
-    notes: Optional[str] = Field(None, alias="Notes")
+    experimenter: str | None = Field(
+        default=None, title="experimenter", validation_alias="2077498028281732"
+    )
+    iacuc_protocol: str | None = Field(
+        default=None,
+        title="iacuc protocol",
+        validation_alias="6581097655652228",
+    )
+    animal_weight_prior: str | None = Field(
+        default=None,
+        title="animal weight prior (g)",
+        validation_alias="4329297841966980",
+    )
+    output_specimen_id: str | None = Field(
+        default=None,
+        title="Output specimen id(s)",
+        validation_alias="8938618089328516",
+    )
+    postfix_solution: str | None = Field(
+        default=None,
+        title="Postfix solution",
+        validation_alias="4554304736153476",
+    )
+    notes: str | None = Field(
+        default=None, title="Notes", validation_alias="36971950854020"
+    )
     model_config = ConfigDict(populate_by_name=True)
 
 
 class ProtocolsModel(BaseModel):
     """Expected model for the Protocols SmartSheet"""
 
-    protocol_type: Optional[str] = Field(None, alias="Protocol Type")
-    procedure_name: Optional[str] = Field(None, alias="Procedure name")
-    protocol_name: Optional[str] = Field(None, alias="Protocol name")
-    doi: Optional[str] = Field(None, alias="DOI")
-    version: Optional[Decimal] = Field(None, alias="Version")
-    protocol_collection: Optional[bool] = Field(
-        None, alias="Protocol collection"
+    protocol_type: str | None = Field(
+        default=None,
+        title="Protocol Type",
+        validation_alias="8808571546324868",
+    )
+    procedure_name: str | None = Field(
+        default=None,
+        title="Procedure name",
+        validation_alias="6725511871942532",
+    )
+    protocol_name: str | None = Field(
+        default=None,
+        title="Protocol name",
+        validation_alias="6394619537346436",
+    )
+    doi: str | None = Field(
+        default=None, title="DOI", validation_alias="4142819723661188"
+    )
+    version: str | None = Field(
+        default=None, title="Version", validation_alias="8646419351031684"
+    )
+    protocol_collection: bool | None = Field(
+        default=None,
+        title="Protocol collection",
+        validation_alias="223584756649860",
+    )
+    website_pages: str | None = Field(
+        default=None, title="Website pages", validation_alias="388788696338308"
     )
     model_config = ConfigDict(populate_by_name=True)
