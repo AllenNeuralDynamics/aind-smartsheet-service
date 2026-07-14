@@ -77,7 +77,6 @@ async def get_health() -> HealthCheck:
     return HealthCheck()
 
 
-# "Discovery Neuromodulation - Subproject 2 Molecular Anatomy Cell Types"
 @router.get(
     "/funding", response_model=List[FundingModel], operation_id="get_funding"
 )
