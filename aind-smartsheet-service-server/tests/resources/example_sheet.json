@@ -104,7 +104,7 @@
             {
                "columnId": 4825776004222852,
                "displayValue": "person.two@acme.org, J Smith, Mary Smith",
-               "value": "person.two@acme.org, J Smith, John Doe II"
+               "value": "person.two@acme.org, J Smith, Mary Smith"
             }
          ],
          "createdAt": "2023-07-31T20:57:28+00:00Z",

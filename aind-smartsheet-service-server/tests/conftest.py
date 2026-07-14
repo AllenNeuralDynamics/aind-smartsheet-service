@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 from pydantic import RedisDsn
 
 from aind_smartsheet_service_server.configs import settings
+from aind_smartsheet_service_server.models import SheetFields
 
 RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 
@@ -20,27 +21,27 @@ patch(
 
 
 @pytest.fixture()
-def mock_raw_funding_sheet() -> str:
+def mock_raw_funding_sheet() -> SheetFields:
     """Raw funding sheet."""
     with open(RESOURCES_DIR / "funding.json") as f:
         contents = json.load(f)
-    return json.dumps(contents)
+    return SheetFields.model_validate(contents)
 
 
 @pytest.fixture()
-def mock_raw_protocols_sheet() -> str:
+def mock_raw_protocols_sheet() -> SheetFields:
     """Expected raw protocols sheet."""
     with open(RESOURCES_DIR / "protocols.json") as f:
         contents = json.load(f)
-    return json.dumps(contents)
+    return SheetFields.model_validate(contents)
 
 
 @pytest.fixture()
-def mock_raw_perfusions_sheet() -> str:
+def mock_raw_perfusions_sheet() -> SheetFields:
     """Expected raw protocols sheet."""
     with open(RESOURCES_DIR / "perfusions.json") as f:
         contents = json.load(f)
-    return json.dumps(contents)
+    return SheetFields.model_validate(contents)
 
 
 @pytest.fixture(scope="session")
