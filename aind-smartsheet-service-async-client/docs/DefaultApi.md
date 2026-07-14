@@ -38,7 +38,7 @@ configuration = aind_smartsheet_service_async_client.Configuration(
 async with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_smartsheet_service_async_client.DefaultApi(api_client)
-    project_name = 'Discovery-Neuromodulator circuit dynamics during foraging' # str |  (optional)
+    project_name = 'Discovery Neuromodulation' # str |  (optional)
     subproject = 'Subproject 2 Molecular Anatomy Cell Types' # str |  (optional)
 
     try:

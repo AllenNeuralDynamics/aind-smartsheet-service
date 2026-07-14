@@ -10,8 +10,8 @@ Name | Type | Description | Notes
 **var_date** | **date** |  | [optional] 
 **experimenter** | **str** |  | [optional] 
 **iacuc_protocol** | **str** |  | [optional] 
-**animal_weight_prior__g** | **str** |  | [optional] 
-**output_specimen_id_s** | **str** |  | [optional] 
+**animal_weight_prior** | **str** |  | [optional] 
+**output_specimen_id** | **str** |  | [optional] 
 **postfix_solution** | **str** |  | [optional] 
 **notes** | **str** |  | [optional] 
 

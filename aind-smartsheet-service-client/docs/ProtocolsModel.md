@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **doi** | **str** |  | [optional] 
 **version** | **str** |  | [optional] 
 **protocol_collection** | **bool** |  | [optional] 
+**website_pages** | **str** |  | [optional] 
 
 ## Example
 
