@@ -40,6 +40,7 @@ dev = [
     'pytest-env',
     'pytest-mock',
     'pytest_asyncio',
+    'httpx2',
 ]
 
 [tool.setuptools.packages.find]

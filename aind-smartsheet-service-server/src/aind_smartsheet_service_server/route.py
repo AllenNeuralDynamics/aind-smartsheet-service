@@ -65,6 +65,7 @@ async def get_smartsheet(
     response_description="Return HTTP Status Code 200 (OK)",
     status_code=status.HTTP_200_OK,
     response_model=HealthCheck,
+    operation_id="get_health",
 )
 async def get_health() -> HealthCheck:
     """
@@ -78,8 +79,7 @@ async def get_health() -> HealthCheck:
 
 # "Discovery Neuromodulation - Subproject 2 Molecular Anatomy Cell Types"
 @router.get(
-    "/funding",
-    response_model=List[FundingModel],
+    "/funding", response_model=List[FundingModel], operation_id="get_funding"
 )
 async def get_funding(
     project_name: Optional[str] = Query(
@@ -134,6 +134,7 @@ async def get_funding(
 @router.get(
     "/project_names",
     response_model=List[str],
+    operation_id="get_project_names",
 )
 async def get_project_names():
     """
@@ -166,6 +167,7 @@ async def get_project_names():
 @router.get(
     "/protocols",
     response_model=List[ProtocolsModel],
+    operation_id="get_protocols",
 )
 async def get_protocols(
     protocol_name: Optional[str] = Query(
@@ -216,6 +218,7 @@ async def get_protocols(
 @router.get(
     "/perfusions",
     response_model=List[PerfusionsModel],
+    operation_id="get_perfusions",
 )
 async def get_perfusions(
     subject_id: Optional[str] = Query(
