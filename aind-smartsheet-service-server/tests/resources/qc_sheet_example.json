@@ -1,0 +1,616 @@
+{
+   "accessLevel": "EDITOR_SHARE",
+   "columns": [
+      {
+         "id": 5706446774423428,
+         "index": 0,
+         "primary": true,
+         "title": "Sample",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 81
+      },
+      {
+         "id": 1303602456203140,
+         "index": 1,
+         "title": "Imaging priority",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 40
+      },
+      {
+         "id": 1724279648112516,
+         "index": 2,
+         "title": "Date Sent for 1X Imaging",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 77
+      },
+      {
+         "formula": "=INDEX({ExM Sample Tracking Range 1}, MATCH(Sample@row, {ExM Sample Tracking Range 2}, 0))",
+         "id": 6470842761645956,
+         "index": 3,
+         "title": "Date of Tissue Processing Completion",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 75
+      },
+      {
+         "formula": "=INDEX({ExM Sample Tracking Range 4}, MATCH(Sample@row, {ExM Sample Tracking Range 2}, 0))",
+         "id": 4750198374174596,
+         "index": 4,
+         "title": "Status",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 137
+      },
+      {
+         "formula": "=INDEX({ExM Sample Tracking Range 3}, MATCH(Sample@row, {ExM Sample Tracking Range 2}, 0))",
+         "id": 3454646960738180,
+         "index": 5,
+         "title": "Genotype",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 91
+      },
+      {
+         "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 1}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+         "hidden": true,
+         "id": 6906506776973188,
+         "index": 6,
+         "title": "Sample Name",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 435
+      },
+      {
+         "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 4}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+         "id": 5890473712717700,
+         "index": 7,
+         "options": [
+            "GFP",
+            "tdTomato",
+            "GFP/tdTomato",
+            "mKate",
+            "SYFP",
+            "CTB 488",
+            "CTB 594",
+            "CTB 555",
+            "CTB 647"
+         ],
+         "title": "Label",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 2,
+         "width": 68
+      },
+      {
+         "id": 7958246588108676,
+         "index": 8,
+         "title": "Project Description",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 143
+      },
+      {
+         "id": 639897193631620,
+         "index": 9,
+         "title": "Perfusion Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 116
+      },
+      {
+         "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range LAS inj}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+         "id": 6038744703127428,
+         "index": 10,
+         "title": "LAS Injection Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 146
+      },
+      {
+         "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range LAS perf}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+         "id": 5143496821002116,
+         "index": 11,
+         "title": "LAS Perfusion/Dissection Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 2891697007316868,
+         "index": 12,
+         "title": "Perfusion / Dissection Quality Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 245
+      },
+      {
+         "id": 972195122335620,
+         "index": 13,
+         "options": [
+            "Pass",
+            "Fail"
+         ],
+         "title": "Perfusion Pass/Fail",
+         "type": "PICKLIST",
+         "validation": true,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 3786944889442180,
+         "index": 14,
+         "title": "Labeling Density Notes (Olympus MXV10)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 514
+      },
+      {
+         "id": 5475794749706116,
+         "index": 15,
+         "title": "Durotomy: Tissue Damage Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 3223994936020868,
+         "index": 16,
+         "title": "Immuno Gross Anatomy Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 184
+      },
+      {
+         "id": 6262033424355204,
+         "index": 17,
+         "options": [
+            "Pass",
+            "Fail"
+         ],
+         "title": "Immuno Pass/Fail",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 140
+      },
+      {
+         "id": 2146233072963460,
+         "index": 18,
+         "title": "Digestion Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 114
+      },
+      {
+         "id": 6649832700333956,
+         "index": 19,
+         "options": [
+            "Pass",
+            "Fail"
+         ],
+         "title": "Digestion Pass/Fail",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 96
+      },
+      {
+         "id": 4637260017602436,
+         "index": 20,
+         "title": "Special Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 111
+      },
+      {
+         "id": 6227879275483012,
+         "index": 21,
+         "options": [
+            "2x",
+            "3x"
+         ],
+         "title": "Brain Size at 1X Imaging",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 123
+      },
+      {
+         "id": 3976079461797764,
+         "index": 22,
+         "title": "1X Screening Link",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 142
+      },
+      {
+         "formula": "=INDEX({Mouse Tracker - ID}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+         "id": 3975198807461764,
+         "index": 23,
+         "title": "Investigator",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 1,
+         "width": 101
+      },
+      {
+         "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 3}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+         "id": 4670982861393796,
+         "index": 24,
+         "title": "Project Name",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 113
+      },
+      {
+         "id": 455954645946244,
+         "index": 25,
+         "options": [
+            "High",
+            "Medium",
+            "Low",
+            "None"
+         ],
+         "title": "Surface labeling",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 131
+      },
+      {
+         "id": 4959554273316740,
+         "index": 26,
+         "options": [
+            "High",
+            "Medium",
+            "Low"
+         ],
+         "title": "Vascular labeling",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 136
+      },
+      {
+         "id": 4820504391929732,
+         "index": 27,
+         "title": "No Artifacts?",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 114
+      },
+      {
+         "id": 2707754459631492,
+         "index": 28,
+         "options": [
+            "Too sparse",
+            "Target sparsity",
+            "Moderate density",
+            "Dense"
+         ],
+         "title": "Targeted Sparsity",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 145
+      },
+      {
+         "id": 8479679089168260,
+         "index": 29,
+         "title": "No Surface Labeling?",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 83
+      },
+      {
+         "id": 316904764559236,
+         "index": 30,
+         "title": "No Vascular Labeling?",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 87
+      },
+      {
+         "id": 2568704578244484,
+         "index": 31,
+         "title": "Targeted Sparsity?",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 75
+      },
+      {
+         "id": 7072304205614980,
+         "index": 32,
+         "options": [
+            "Pass",
+            "Fail"
+         ],
+         "title": "1X Review Pass/Fail",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 6546073897439108,
+         "index": 33,
+         "title": "1x screening notes - Platform lead",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 4294274083753860,
+         "index": 34,
+         "title": "1x screening notes - Sample processing RA",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 205
+      },
+      {
+         "id": 8797873711124356,
+         "index": 35,
+         "title": "1x screening notes - Investigator",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "formula": "=INDEX({ExM Dataset Summary Range 1}, MATCH(Sample@row, {ExM Dataset Summary Range 2}, 0))",
+         "id": 361522735124356,
+         "index": 36,
+         "title": "5x Imaging Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      }
+   ],
+   "createdAt": "2026-03-05T19:32:25+00:00Z",
+   "dependenciesEnabled": false,
+   "effectiveAttachmentOptions": [
+      "BOX_COM",
+      "DROPBOX",
+      "EGNYTE",
+      "EVERNOTE",
+      "FILE",
+      "GOOGLE_DRIVE",
+      "LINK",
+      "ONEDRIVE"
+   ],
+   "ganttEnabled": false,
+   "hasSummaryFields": false,
+   "id": 93261067669380,
+   "modifiedAt": "2026-07-09T18:38:56+00:00Z",
+   "name": "Sample Processing QC",
+   "permalink": "https://example.com/sheets/ghi",
+   "readOnly": true,
+   "resourceManagementEnabled": false,
+   "rows": [
+      {
+         "cells": [
+            {
+               "columnId": 5706446774423428,
+               "displayValue": "822178",
+               "value": 822178.0
+            },
+            {
+               "columnId": 1303602456203140
+            },
+            {
+               "columnId": 1724279648112516,
+               "value": "2026-03-24"
+            },
+            {
+               "columnId": 6470842761645956,
+               "displayValue": "01/30/26",
+               "formula": "=INDEX({ExM Sample Tracking Range 1}, MATCH(Sample@row, {ExM Sample Tracking Range 2}, 0))",
+               "value": "01/30/26"
+            },
+            {
+               "columnId": 4750198374174596,
+               "displayValue": "Imaged",
+               "formula": "=INDEX({ExM Sample Tracking Range 4}, MATCH(Sample@row, {ExM Sample Tracking Range 2}, 0))",
+               "value": "Imaged"
+            },
+            {
+               "columnId": 3454646960738180,
+               "displayValue": "C57BL/6J + AiP1996-AiE2199m",
+               "formula": "=INDEX({ExM Sample Tracking Range 3}, MATCH(Sample@row, {ExM Sample Tracking Range 2}, 0))",
+               "value": "C57BL/6J + AiP1996-AiE2199m"
+            },
+            {
+               "columnId": 6906506776973188,
+               "displayValue": "C57BL/6J + AiP1996-AiE2199m",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 1}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+               "value": "C57BL/6J + AiP1996-AiE2199m"
+            },
+            {
+               "columnId": 5890473712717700,
+               "displayValue": "tdTomato",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 4}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+               "value": "tdTomato"
+            },
+            {
+               "columnId": 7958246588108676,
+               "displayValue": "AiE2199m (5E+11) - save for potential ExASPIM",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range Proj Descr}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+               "value": "AiE2199m (5E+11) - save for potential ExASPIM"
+            },
+            {
+               "columnId": 639897193631620,
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range Perf Date}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+               "value": "2025-10-01"
+            },
+            {
+               "columnId": 6038744703127428,
+               "displayValue": "1/2 needle depth, did not hit bone plate. Bleeding.",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range LAS inj}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+               "value": "1/2 needle depth, did not hit bone plate. Bleeding."
+            },
+            {
+               "columnId": 5143496821002116,
+               "displayValue": "Lung inflation.",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range LAS perf}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+               "value": "Lung inflation."
+            },
+            {
+               "columnId": 2891697007316868
+            },
+            {
+               "columnId": 972195122335620
+            },
+            {
+               "columnId": 3786944889442180,
+               "displayValue": "Difficult to see, one bright cell labeled on ventral side, possibly some cells labeled deep",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 2}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))",
+               "value": "Difficult to see, one bright cell labeled on ventral side, possibly some cells labeled deep"
+            },
+            {
+               "columnId": 5475794749706116,
+               "displayValue": "No tissue damage noticed",
+               "value": "No tissue damage noticed"
+            },
+            {
+               "columnId": 3223994936020868,
+               "displayValue": "Label is mostly seen in the medulla area. Not much seen elsewhere",
+               "value": "Label is mostly seen in the medulla area. Not much seen elsewhere"
+            },
+            {
+               "columnId": 6262033424355204,
+               "displayValue": "Pass",
+               "value": "Pass"
+            },
+            {
+               "columnId": 2146233072963460,
+               "displayValue": "Clear sample by eye",
+               "value": "Clear sample by eye"
+            },
+            {
+               "columnId": 6649832700333956,
+               "displayValue": "Pass",
+               "value": "Pass"
+            },
+            {
+               "columnId": 4637260017602436
+            },
+            {
+               "columnId": 6227879275483012,
+               "displayValue": "2x",
+               "value": "2x"
+            },
+            {
+               "columnId": 3976079461797764,
+               "displayValue": "https://example.com/process_output.json",
+               "value": "https://example.com/process_output.json"
+            },
+            {
+               "columnId": 3975198807461764,
+               "formula": "=INDEX({Mouse Tracker - ID}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))"
+            },
+            {
+               "columnId": 4670982861393796,
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 3}, MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range ID}, 0))"
+            },
+            {
+               "columnId": 455954645946244,
+               "displayValue": "Low",
+               "value": "Low"
+            },
+            {
+               "columnId": 4959554273316740
+            },
+            {
+               "columnId": 4820504391929732,
+               "value": true
+            },
+            {
+               "columnId": 2707754459631492,
+               "displayValue": "Target sparsity",
+               "value": "Target sparsity"
+            },
+            {
+               "columnId": 8479679089168260,
+               "value": true
+            },
+            {
+               "columnId": 316904764559236,
+               "value": true
+            },
+            {
+               "columnId": 2568704578244484,
+               "value": true
+            },
+            {
+               "columnId": 7072304205614980,
+               "displayValue": "Pass",
+               "value": "Pass"
+            },
+            {
+               "columnId": 6546073897439108
+            },
+            {
+               "columnId": 4294274083753860,
+               "displayValue": "Sparse and bright label. Only a handful somas in the thalamus. Some junk on the surface",
+               "value": "Sparse and bright label. Only a handful somas in the thalamus. Some junk on the surface"
+            },
+            {
+               "columnId": 8797873711124356
+            },
+            {
+               "columnId": 361522735124356,
+               "formula": "=INDEX({ExM Dataset Summary Range 1}, MATCH(Sample@row, {ExM Dataset Summary Range 2}, 0))",
+               "value": "2026-04-03"
+            }
+         ],
+         "createdAt": "2026-03-25T18:58:53+00:00Z",
+         "expanded": true,
+         "id": 8541553941086084,
+         "modifiedAt": "2026-05-22T21:13:57+00:00Z",
+         "rowNumber": 33,
+         "siblingId": 4037954313715588
+      }
+   ],
+   "totalRowCount": 1,
+   "userPermissions": {
+      "summaryPermissions": "READ_WRITE"
+   },
+   "userSettings": {
+      "criticalPathEnabled": false,
+      "displaySummaryTasks": true
+   },
+   "version": 774,
+   "workspace": {
+      "id": 4328390162442116,
+      "name": "ExASPIM Datasets"
+   }
+}

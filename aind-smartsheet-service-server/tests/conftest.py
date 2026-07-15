@@ -44,6 +44,38 @@ def mock_raw_perfusions_sheet() -> SheetFields:
     return SheetFields.model_validate(contents)
 
 
+@pytest.fixture()
+def mock_raw_mouse_tracking_sheet() -> SheetFields:
+    """Raw mouse tracking sheet."""
+    with open(RESOURCES_DIR / "mouse_tracker_example.json") as f:
+        contents = json.load(f)
+    return SheetFields.model_validate(contents)
+
+
+@pytest.fixture()
+def mock_raw_imaging_queue_sheet() -> SheetFields:
+    """Expected raw imaging queue sheet."""
+    with open(RESOURCES_DIR / "imq_sheet_example.json") as f:
+        contents = json.load(f)
+    return SheetFields.model_validate(contents)
+
+
+@pytest.fixture()
+def mock_raw_qc_sheet() -> SheetFields:
+    """Expected raw qc sheet."""
+    with open(RESOURCES_DIR / "qc_sheet_example.json") as f:
+        contents = json.load(f)
+    return SheetFields.model_validate(contents)
+
+
+@pytest.fixture()
+def mock_raw_sample_tracking_sheet() -> SheetFields:
+    """Expected raw status tracking sheet."""
+    with open(RESOURCES_DIR / "st_sheet_example.json") as f:
+        contents = json.load(f)
+    return SheetFields.model_validate(contents)
+
+
 @pytest.fixture(scope="session")
 def client() -> Generator[TestClient, Any, None]:
     """Creating a client for testing purposes."""
@@ -76,6 +108,10 @@ def client_with_redis() -> Generator[TestClient, Any, None]:
         ),
         patch(
             "aind_smartsheet_service_server.main.RedisBackend",
+            return_value=None,
+        ),
+        patch(
+            "aind_smartsheet_service_server.main.Semaphore",
             return_value=None,
         ),
     ):

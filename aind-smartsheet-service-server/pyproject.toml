@@ -95,10 +95,15 @@ fail-under = 100
 asyncio_mode="auto"
 asyncio_default_fixture_loop_scope="function"
 env = [
-    "SMARTSHEET_ACCESS_TOKEN=abcdef",
-    "SMARTSHEET_FUNDING_ID=123",
-    "SMARTSHEET_PROTOCOLS_ID=456",
-    "SMARTSHEET_PERFUSIONS_ID=789",
+    "SMARTSHEET_ACCESS_TOKEN=abcdef2",
+    "SMARTSHEET_ACCESS_TOKEN_2=uvwxyz3",
+    "SMARTSHEET_FUNDING_ID=100",
+    "SMARTSHEET_PROTOCOLS_ID=101",
+    "SMARTSHEET_PERFUSIONS_ID=102",
+    "SMARTSHEET_MOUSE_TRACKER_ID=103",
+    "SMARTSHEET_SAMPLE_TRACKING_ID=104",
+    "SMARTSHEET_IMAGING_QUEUE_ID=105",
+    "SMARTSHEET_EXASPIM_QC_SHEET_ID=106"
 ]
 filterwarnings = [
     # Warning originating from smartsheet-python-sdk
