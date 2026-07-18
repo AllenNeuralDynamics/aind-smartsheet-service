@@ -4,11 +4,82 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**get_exaspim_info**](DefaultApi.md#get_exaspim_info) | **GET** /get_exaspim_info | Get Exaspim Info
 [**get_funding**](DefaultApi.md#get_funding) | **GET** /funding | Get Funding
 [**get_perfusions**](DefaultApi.md#get_perfusions) | **GET** /perfusions | Get Perfusions
 [**get_project_names**](DefaultApi.md#get_project_names) | **GET** /project_names | Get Project Names
 [**get_protocols**](DefaultApi.md#get_protocols) | **GET** /protocols | Get Protocols
 
+
+# **get_exaspim_info**
+> ExaSPIMInfo get_exaspim_info(specimen_id)
+
+Get Exaspim Info
+
+## exaSPIM Information endpoint
+Returns exaSPIM info for a given specimen_id.
+
+### Example
+
+
+```python
+import aind_smartsheet_service_async_client
+from aind_smartsheet_service_async_client.models.exa_spim_info import ExaSPIMInfo
+from aind_smartsheet_service_async_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = aind_smartsheet_service_async_client.Configuration(
+    host = "http://localhost"
+)
+
+
+# Enter a context with an instance of the API client
+async with aind_smartsheet_service_async_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = aind_smartsheet_service_async_client.DefaultApi(api_client)
+    specimen_id = '822178' # str | 
+
+    try:
+        # Get Exaspim Info
+        api_response = await api_instance.get_exaspim_info(specimen_id)
+        print("The response of DefaultApi->get_exaspim_info:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling DefaultApi->get_exaspim_info: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **specimen_id** | **str**|  | 
+
+### Return type
+
+[**ExaSPIMInfo**](ExaSPIMInfo.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Successful Response |  -  |
+**422** | Validation Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_funding**
 > List[FundingModel] get_funding(project_name=project_name, subproject=subproject)
