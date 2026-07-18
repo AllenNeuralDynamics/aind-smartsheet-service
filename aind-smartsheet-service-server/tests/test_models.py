@@ -39,19 +39,22 @@ class TestParsing(unittest.TestCase):
 
     def test_parse_datetime_str(self):
         """Tests _parse_datetime_str validator function."""
-        example_row = SheetRow(
-            cells=[
-                SheetRowCell(
-                    columnId=1729551260405636,
-                    value="122-01-001-10",
-                    displayValue="122-01-001-10",
-                )
-            ],
-            createdAt="2023-08-07T23:39:14+00:00Z",
-            expanded=False,
-            id=123456,
-            modifiedAt="2023-12-20T18:32:10+00:00",
-            rowNumber=1,
+        example_row = SheetRow.model_validate(
+            {
+                "cells": [
+                    {
+                        "columnId": 1729551260405636,
+                        "displayValue": "122-01-001-10",
+                        "value": "122-01-001-10",
+                    }
+                ],
+                "createdAt": "2023-08-07T23:39:14Z",
+                "expanded": False,
+                "id": 123456,
+                "modifiedAt": "2023-12-20T18:32:10Z",
+                "rowNumber": 1,
+                "siblingId": None,
+            }
         )
         expected_validated_row = SheetRow(
             cells=[

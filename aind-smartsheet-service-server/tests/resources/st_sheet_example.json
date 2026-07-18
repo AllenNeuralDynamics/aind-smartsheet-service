@@ -1,0 +1,1041 @@
+{
+   "accessLevel": "EDITOR_SHARE",
+   "columns": [
+      {
+         "autoNumberFormat": {
+            "fill": "0",
+            "prefix": "",
+            "startingNumber": 1643,
+            "suffix": ""
+         },
+         "hidden": true,
+         "id": 7255869600255876,
+         "index": 0,
+         "systemColumnType": "AUTO_NUMBER",
+         "title": "Auto",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 46
+      },
+      {
+         "formula": "=IF([Submitted Priority]@row <> \"\", COUNTIFS([Submitted Priority]:[Submitted Priority], @cell < [Submitted Priority]@row) + COUNTIFS([Submitted Priority]:[Submitted Priority], @cell = [Submitted Priority]@row, Auto:Auto, @cell >= Auto@row))",
+         "hidden": true,
+         "id": 2752269972885380,
+         "index": 1,
+         "locked": true,
+         "lockedForUser": true,
+         "title": "TRUE Priority",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 63
+      },
+      {
+         "hidden": true,
+         "id": 1006874610585476,
+         "index": 2,
+         "title": "Submitted Priority",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 82
+      },
+      {
+         "id": 2118380215553924,
+         "index": 3,
+         "title": "External Sample",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 40
+      },
+      {
+         "id": 3700590659276676,
+         "index": 4,
+         "options": [
+            "Ready for screening",
+            "Screened"
+         ],
+         "title": "Screening status",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 89
+      },
+      {
+         "description": "Orange =  in the gel and ready for expansion\nPink\t=        imaged",
+         "id": 1212189360738180,
+         "index": 5,
+         "options": [
+            "Delipidation",
+            "Paused",
+            "Antibody Staining",
+            "Paused before Gelation",
+            "Gelation",
+            "Ready for expansion",
+            "Expanding",
+            "Mounted",
+            "Imaged",
+            "Not Imaged: see notes",
+            "Ready For ExM Tissue Processing"
+         ],
+         "title": "Status",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 7747879749767044,
+         "index": 6,
+         "primary": true,
+         "title": "Sample",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 80
+      },
+      {
+         "id": 4370180029239172,
+         "index": 7,
+         "title": "Genotype",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 309
+      },
+      {
+         "id": 6841688894951300,
+         "index": 8,
+         "title": "Processing Lead",
+         "type": "CONTACT_LIST",
+         "validation": false,
+         "version": 0,
+         "width": 133
+      },
+      {
+         "formula": "=ROUNDUP(MATCH(Genotype@row, {Mouse Tracker - Molecular Anatomy ID}, 0) / 2)",
+         "id": 8391723336814468,
+         "index": 9,
+         "title": "Project",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 1}, (MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range 2}, 0)))",
+         "id": 4726059059941252,
+         "index": 10,
+         "title": "Project description",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 1788928007556996,
+         "index": 11,
+         "title": "Project name",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 8873779656609668,
+         "index": 12,
+         "title": "Label",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 127
+      },
+      {
+         "description": "Blue\t=      ~p21 Viral Injection\nPurple =\t~p35 viral injection",
+         "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Inj_age}, ROUNDUP(MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy ID}, 0) / 2))",
+         "id": 77686634401668,
+         "index": 13,
+         "title": "Age of Injection",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 72
+      },
+      {
+         "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 4}, ROUNDUP(MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range 3}, 0) / 2))",
+         "id": 1324377418190724,
+         "index": 14,
+         "title": "Virus Dose",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 80
+      },
+      {
+         "id": 2329486448086916,
+         "index": 15,
+         "title": "DCM Delipidation Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 6833086075457412,
+         "index": 16,
+         "title": "DCM Delipidation End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 1203586541244292,
+         "index": 17,
+         "title": "SBiP Delipidation Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 5707186168614788,
+         "index": 18,
+         "title": "SBiP Delipidation End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 1581397634404228,
+         "index": 19,
+         "title": "Immuno: Primary Ab Start Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 86
+      },
+      {
+         "id": 3455386354929540,
+         "index": 20,
+         "title": "Immuno: Primary Antibody1",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 140
+      },
+      {
+         "id": 8828048989179780,
+         "index": 21,
+         "title": "Mass of Primary Antibody1 used per Brain (ug)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 79
+      },
+      {
+         "id": 8164547174027140,
+         "index": 22,
+         "title": "Primary Antibody1 Catalog #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 87
+      },
+      {
+         "id": 4058955958407044,
+         "index": 23,
+         "title": "Primary Antibody1 Lot #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 93
+      },
+      {
+         "id": 4619349745684356,
+         "index": 24,
+         "title": "Immuno: Primary Antibody2",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 124
+      },
+      {
+         "id": 2367549931999108,
+         "index": 25,
+         "title": "Mass of Primary Antibody2 used per Brain (ug)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 86
+      },
+      {
+         "id": 6871149559369604,
+         "index": 26,
+         "title": "Primary Antibody2 Catalog #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 87
+      },
+      {
+         "id": 1241650025156484,
+         "index": 27,
+         "title": "Primary Antibody2 Lot #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 5745249652526980,
+         "index": 28,
+         "title": "Immuno: Primary Antibody3",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 86
+      },
+      {
+         "id": 3493449838841732,
+         "index": 29,
+         "title": "Mass of Primary Antibody3 used per Brain (ug)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 7997049466212228,
+         "index": 30,
+         "title": "Primary Antibody3 Catalog #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 678700071735172,
+         "index": 31,
+         "title": "Primary Antibody3 Lot #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 2585472132927364,
+         "index": 32,
+         "title": "Primary Antibody RRID",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 79
+      },
+      {
+         "id": 6084997261774724,
+         "index": 33,
+         "title": "Immuno: Secondary Ab Start Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 102
+      },
+      {
+         "id": 7958985982300036,
+         "index": 34,
+         "title": "Immuno: Secondary Antibody1",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 220
+      },
+      {
+         "id": 8331167712366468,
+         "index": 35,
+         "title": "Mass of Secondary Antibody1 used per Brain (ug)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 3933310985129860,
+         "index": 36,
+         "title": "Secondary Antibody1 Catalog #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 100
+      },
+      {
+         "id": 8562555585777540,
+         "index": 37,
+         "title": "Secondary Antibody1 Lot #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 128
+      },
+      {
+         "id": 7619773901787012,
+         "index": 38,
+         "title": "Immuno: Secondary Antibody2",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 181
+      },
+      {
+         "id": 2671906346979204,
+         "index": 39,
+         "title": "Mass of Secondary Antibody2 used per Brain (ug)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 4923706160664452,
+         "index": 40,
+         "title": "Secondary Antibody2 Catalog #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 420106533293956,
+         "index": 41,
+         "title": "Secondary Antibody2 Lot #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 1990274367573892,
+         "index": 42,
+         "title": "Immuno: Secondary Antibody3",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 6049606067507076,
+         "index": 43,
+         "title": "Mass of Secondary Antibody3 used per Brain (ug)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 1546006440136580,
+         "index": 44,
+         "title": "Secondary Antibody3 Catalog #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 7175505974349700,
+         "index": 45,
+         "title": "Secondary Antibody3 Lot #",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 7089071760297860,
+         "index": 46,
+         "title": "Secondary Antibody RRID",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 94
+      },
+      {
+         "id": 7608858729992068,
+         "index": 47,
+         "options": [
+            "AF 488",
+            "AF 546",
+            "AF 568",
+            "AF 647",
+            "ATTO 565",
+            "JF 669"
+         ],
+         "title": "Fluorophore1",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 2,
+         "width": 122
+      },
+      {
+         "id": 4242074181259140,
+         "index": 48,
+         "options": [
+            "AF 488",
+            "AF 568",
+            "ATTO 643"
+         ],
+         "title": "Fluorophore2",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 2,
+         "width": 117
+      },
+      {
+         "id": 6493873994944388,
+         "index": 49,
+         "options": [
+            "AF 568",
+            "n/a"
+         ],
+         "title": "Fluorophore3",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 2,
+         "width": 117
+      },
+      {
+         "formula": "=[Fluorophore1]@row + [Fluorophore2]@row + [Fluorophore3]@row",
+         "id": 6497713993502596,
+         "index": 50,
+         "title": "FluorophoreT",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 640636587822980,
+         "index": 51,
+         "title": "Gelation: MBS Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 5144236215193476,
+         "index": 52,
+         "title": "Gelation: MBS End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 2892436401508228,
+         "index": 53,
+         "title": "Gelation: AcX Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 7396036028878724,
+         "index": 54,
+         "title": "Gelation: AcX End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 1766536494665604,
+         "index": 55,
+         "title": "Gelation: PBS Wash Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 105
+      },
+      {
+         "id": 6270136122036100,
+         "index": 56,
+         "title": "Gelation: PBS Wash End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 100
+      },
+      {
+         "id": 4018336308350852,
+         "index": 57,
+         "title": "Gelation: Stock X + VA-044 Equilibration  Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 113
+      },
+      {
+         "id": 8521935935721348,
+         "index": 58,
+         "title": "Gelation: Stock X + VA-044 Equilibration End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 128
+      },
+      {
+         "id": 359161611112324,
+         "index": 59,
+         "title": "Gelation +  ProK RT Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 111
+      },
+      {
+         "id": 4862761238482820,
+         "index": 60,
+         "title": "Gelation +  ProK RT End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 110
+      },
+      {
+         "formula": "=[Gelation +  ProK RT End]@row - [Gelation +  ProK RT Start]@row",
+         "id": 2610961424797572,
+         "index": 61,
+         "title": "Duration (days)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 95
+      },
+      {
+         "id": 7114561052168068,
+         "index": 62,
+         "title": "Gelation + Add'l ProK 37C Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 106
+      },
+      {
+         "id": 1485061517954948,
+         "index": 63,
+         "title": "Gelation + Add'l ProK 37C End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 98
+      },
+      {
+         "formula": "=[Gelation + Add'l ProK 37C End]@row - [Gelation + Add'l ProK 37C Start]@row",
+         "id": 5988661145325444,
+         "index": 64,
+         "title": "Duration (days) Gelation + Add'l ProK 37C",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 98
+      },
+      {
+         "id": 3736861331640196,
+         "index": 65,
+         "title": "PBS Wash Start",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 108
+      },
+      {
+         "id": 8240460959010692,
+         "index": 66,
+         "title": "PBS Wash End",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 105
+      },
+      {
+         "id": 922111564533636,
+         "index": 67,
+         "options": [
+            "PBS Azide 0.01% at 4C",
+            "PBS Azide 0.05% at 4C"
+         ],
+         "title": "Date of Storage in PBS Az 0.05% @4C",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 154
+      },
+      {
+         "id": 5425711191904132,
+         "index": 68,
+         "title": "Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 542
+      },
+      {
+         "id": 3173911378218884,
+         "index": 69,
+         "title": "Notes II",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 586
+      },
+      {
+         "id": 7677511005589380,
+         "index": 70,
+         "title": "Notes III",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 998
+      }
+   ],
+   "createdAt": "2023-04-11T01:04:25+00:00Z",
+   "dependenciesEnabled": false,
+   "effectiveAttachmentOptions": [
+      "BOX_COM",
+      "DROPBOX",
+      "EGNYTE",
+      "EVERNOTE",
+      "FILE",
+      "GOOGLE_DRIVE",
+      "LINK",
+      "ONEDRIVE"
+   ],
+   "ganttEnabled": false,
+   "hasSummaryFields": false,
+   "id": 3142827793928068,
+   "modifiedAt": "2026-07-09T18:24:58+00:00Z",
+   "name": "ExM Sample Tracking",
+   "permalink": "https://example.com/sheets/jkl",
+   "readOnly": true,
+   "resourceManagementEnabled": false,
+   "rows": [
+      {
+         "cells": [
+            {
+               "columnId": 7255869600255876,
+               "displayValue": "334",
+               "value": 334.0
+            },
+            {
+               "columnId": 2752269972885380,
+               "formula": "=IF([Submitted Priority]@row <> \"\", COUNTIFS([Submitted Priority]:[Submitted Priority], @cell < [Submitted Priority]@row) + COUNTIFS([Submitted Priority]:[Submitted Priority], @cell = [Submitted Priority]@row, Auto:Auto, @cell >= Auto@row))"
+            },
+            {
+               "columnId": 1006874610585476
+            },
+            {
+               "columnId": 2118380215553924,
+               "value": false
+            },
+            {
+               "columnId": 3700590659276676,
+               "displayValue": "Screened",
+               "value": "Screened"
+            },
+            {
+               "columnId": 1212189360738180,
+               "displayValue": "Imaged",
+               "value": "Imaged"
+            },
+            {
+               "columnId": 7747879749767044,
+               "displayValue": "822178",
+               "value": 822178.0
+            },
+            {
+               "columnId": 4370180029239172,
+               "displayValue": "C57BL/6J + AiP1996-AiE2199m",
+               "value": "C57BL/6J + AiP1996-AiE2199m"
+            },
+            {
+               "columnId": 6841688894951300,
+               "displayValue": "Person One",
+               "value": "person.one@example.com"
+            },
+            {
+               "columnId": 8391723336814468,
+               "displayValue": "878",
+               "formula": "=ROUNDUP(MATCH(Genotype@row, {Mouse Tracker - Molecular Anatomy ID}, 0) / 2)",
+               "value": 878.0
+            },
+            {
+               "columnId": 4726059059941252,
+               "displayValue": "AiE2199m (5E+11) - save for potential ExASPIM",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 1}, (MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range 2}, 0)))",
+               "value": "AiE2199m (5E+11) - save for potential ExASPIM"
+            },
+            {
+               "columnId": 1788928007556996
+            },
+            {
+               "columnId": 8873779656609668,
+               "displayValue": "tdTomato",
+               "value": "tdTomato"
+            },
+            {
+               "columnId": 77686634401668,
+               "displayValue": "36",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Inj_age}, ROUNDUP(MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy ID}, 0) / 2))",
+               "value": 36.0
+            },
+            {
+               "columnId": 1324377418190724,
+               "displayValue": "5E+11",
+               "formula": "=INDEX({Mouse Tracker - Molecular Anatomy Range 4}, ROUNDUP(MATCH(Sample@row, {Mouse Tracker - Molecular Anatomy Range 3}, 0) / 2))",
+               "value": "5E+11"
+            },
+            {
+               "columnId": 2329486448086916,
+               "value": "2025-10-23"
+            },
+            {
+               "columnId": 6833086075457412,
+               "value": "2025-11-07"
+            },
+            {
+               "columnId": 1203586541244292,
+               "value": "2025-11-08"
+            },
+            {
+               "columnId": 5707186168614788,
+               "value": "2025-11-20"
+            },
+            {
+               "columnId": 1581397634404228,
+               "value": "2025-11-21"
+            },
+            {
+               "columnId": 3455386354929540,
+               "displayValue": "Goat Anti-tdT",
+               "value": "Goat Anti-tdT"
+            },
+            {
+               "columnId": 8828048989179780,
+               "displayValue": "20",
+               "value": 20.0
+            },
+            {
+               "columnId": 8164547174027140,
+               "displayValue": "AB8181-200",
+               "value": "AB8181-200"
+            },
+            {
+               "columnId": 4058955958407044,
+               "displayValue": "0081161122",
+               "value": "0081161122"
+            },
+            {
+               "columnId": 4619349745684356
+            },
+            {
+               "columnId": 2367549931999108
+            },
+            {
+               "columnId": 6871149559369604
+            },
+            {
+               "columnId": 1241650025156484
+            },
+            {
+               "columnId": 5745249652526980
+            },
+            {
+               "columnId": 3493449838841732
+            },
+            {
+               "columnId": 7997049466212228
+            },
+            {
+               "columnId": 678700071735172
+            },
+            {
+               "columnId": 2585472132927364
+            },
+            {
+               "columnId": 6084997261774724,
+               "value": "2025-12-08"
+            },
+            {
+               "columnId": 7958985982300036,
+               "displayValue": "Donkey anti-Goat IgG (H+L) AF 568",
+               "formula": "=INDEX({AIND_AntibodyMasterList_Name}, ROUNDUP(MATCH([Secondary Antibody1 Lot #]@row, {AIND_AntibodyMasterList_Lot}, 0) / 2))",
+               "value": "Donkey anti-Goat IgG (H+L) AF 568"
+            },
+            {
+               "columnId": 8331167712366468,
+               "displayValue": "30",
+               "value": 30.0
+            },
+            {
+               "columnId": 3933310985129860,
+               "displayValue": "A11057",
+               "value": "A11057"
+            },
+            {
+               "columnId": 8562555585777540,
+               "displayValue": "2776028",
+               "value": 2776028.0
+            },
+            {
+               "columnId": 7619773901787012
+            },
+            {
+               "columnId": 2671906346979204
+            },
+            {
+               "columnId": 4923706160664452
+            },
+            {
+               "columnId": 420106533293956
+            },
+            {
+               "columnId": 1990274367573892
+            },
+            {
+               "columnId": 6049606067507076
+            },
+            {
+               "columnId": 1546006440136580
+            },
+            {
+               "columnId": 7175505974349700
+            },
+            {
+               "columnId": 7089071760297860
+            },
+            {
+               "columnId": 7608858729992068,
+               "displayValue": "AF 568",
+               "value": "AF 568"
+            },
+            {
+               "columnId": 4242074181259140
+            },
+            {
+               "columnId": 6493873994944388
+            },
+            {
+               "columnId": 6497713993502596,
+               "displayValue": "AF 568",
+               "formula": "=[Fluorophore1]@row + [Fluorophore2]@row + [Fluorophore3]@row",
+               "value": "AF 568"
+            },
+            {
+               "columnId": 640636587822980,
+               "value": "2026-01-08"
+            },
+            {
+               "columnId": 5144236215193476,
+               "value": "2026-01-09"
+            },
+            {
+               "columnId": 2892436401508228,
+               "value": "2026-01-09"
+            },
+            {
+               "columnId": 7396036028878724,
+               "value": "2026-01-13"
+            },
+            {
+               "columnId": 1766536494665604,
+               "value": "2026-01-13"
+            },
+            {
+               "columnId": 6270136122036100,
+               "value": "2026-01-15"
+            },
+            {
+               "columnId": 4018336308350852,
+               "value": "2026-01-15"
+            },
+            {
+               "columnId": 8521935935721348,
+               "value": "2026-01-21"
+            },
+            {
+               "columnId": 359161611112324,
+               "value": "2026-01-21"
+            },
+            {
+               "columnId": 4862761238482820,
+               "value": "2026-01-23"
+            },
+            {
+               "columnId": 2610961424797572,
+               "displayValue": "2",
+               "formula": "=[Gelation +  ProK RT End]@row - [Gelation +  ProK RT Start]@row",
+               "value": 2.0
+            },
+            {
+               "columnId": 7114561052168068,
+               "value": "2026-01-23"
+            },
+            {
+               "columnId": 1485061517954948,
+               "value": "2026-01-28"
+            },
+            {
+               "columnId": 5988661145325444,
+               "displayValue": "5",
+               "formula": "=[Gelation + Add'l ProK 37C End]@row - [Gelation + Add'l ProK 37C Start]@row",
+               "value": 5.0
+            },
+            {
+               "columnId": 3736861331640196,
+               "value": "2026-01-28"
+            },
+            {
+               "columnId": 8240460959010692,
+               "value": "2026-01-30"
+            },
+            {
+               "columnId": 922111564533636,
+               "displayValue": "01/30/26",
+               "value": "01/30/26"
+            },
+            {
+               "columnId": 5425711191904132
+            },
+            {
+               "columnId": 3173911378218884
+            },
+            {
+               "columnId": 7677511005589380
+            }
+         ],
+         "createdAt": "2025-10-27T22:05:51+00:00Z",
+         "expanded": true,
+         "id": 4701712710963076,
+         "modifiedAt": "2026-06-23T21:36:29+00:00Z",
+         "rowNumber": 318,
+         "siblingId": 198113083592580
+      }
+   ],
+   "totalRowCount": 1,
+   "userPermissions": {
+      "summaryPermissions": "READ_WRITE"
+   },
+   "userSettings": {
+      "criticalPathEnabled": false,
+      "displaySummaryTasks": true
+   },
+   "version": 2235,
+   "workspace": {
+      "id": 4328390162442116,
+      "name": "ExASPIM Datasets"
+   }
+}

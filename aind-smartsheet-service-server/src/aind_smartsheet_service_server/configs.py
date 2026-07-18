@@ -13,6 +13,10 @@ class Settings(SecretsManagerBaseSettings):
     access_token: SecretStr = Field(
         ..., description="API token. Can be created in Smartsheet UI."
     )
+    access_token_2: SecretStr = Field(
+        ...,
+        description="API token for fetching exaSPIM Smartsheets.",
+    )
     user_agent: Optional[str] = Field(
         default="aind-smartsheet-service-server",
         description=(
@@ -29,6 +33,22 @@ class Settings(SecretsManagerBaseSettings):
     )
     protocols_id: int = Field(
         ..., description="SmartSheet ID of protocols info"
+    )
+    mouse_tracker_id: int = Field(
+        ..., description="SmartSheet ID of mouse tracker info"
+    )
+    sample_tracking_id: int = Field(
+        ..., description="SmartSheet ID of sample tracking info"
+    )
+    imaging_queue_id: int = Field(
+        ..., description="SmartSheet ID of imaging queue info"
+    )
+    exaspim_qc_sheet_id: int = Field(
+        ..., description="SmartSheet ID of exaSPIM QC sheet info"
+    )
+    app_concurrency_limit: int = Field(
+        default=2,
+        description="Limit number of large sheets being downloaded at once.",
     )
     redis_url: Optional[RedisDsn] = Field(default=None)
     model_config = SettingsConfigDict(env_prefix="SMARTSHEET_")

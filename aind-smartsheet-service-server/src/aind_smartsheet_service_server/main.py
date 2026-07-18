@@ -2,6 +2,7 @@
 
 import logging
 import os
+from asyncio import Semaphore
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -31,6 +32,8 @@ Service to pull data from SmartSheet.
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Init cache and add to lifespan of app"""
+    # noinspection PyUnresolvedReferences
+    app.state.semaphore = Semaphore(settings.app_concurrency_limit)
     if settings.redis_url is not None:
         redis = from_url(settings.redis_url.unicode_string())
         FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")

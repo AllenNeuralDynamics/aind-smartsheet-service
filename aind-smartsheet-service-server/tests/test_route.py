@@ -226,6 +226,30 @@ class TestRoutes:
         assert 200 == response.status_code
         assert expected_response == response.json()
 
+    @patch("aind_smartsheet_service_server.route.get_smartsheet")
+    async def test_get_exaspim_info(
+        self,
+        mock_get_smartsheet: AsyncMock,
+        client: TestClient,
+        mock_raw_mouse_tracking_sheet: str,
+        mock_raw_sample_tracking_sheet: str,
+        mock_raw_imaging_queue_sheet: str,
+        mock_raw_qc_sheet: str,
+    ):
+        """Tests successful retrieval of info from exaSPIM Smartsheets"""
+        mock_get_smartsheet.side_effect = [
+            mock_raw_mouse_tracking_sheet,
+            mock_raw_sample_tracking_sheet,
+            mock_raw_imaging_queue_sheet,
+            mock_raw_qc_sheet,
+        ]
+        response = client.get("/get_exaspim_info?specimen_id=822178")
+        assert response.status_code == 200
+        assert len(response.json()["mouse_tracker_info"]) == 1
+        assert len(response.json()["sample_tracking_info"]) == 1
+        assert len(response.json()["imaging_queue_info"]) == 1
+        assert len(response.json()["qc_sheet_info"]) == 1
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

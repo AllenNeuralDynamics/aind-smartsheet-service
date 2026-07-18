@@ -1,0 +1,377 @@
+{
+   "accessLevel": "EDITOR_SHARE",
+   "columns": [
+      {
+         "id": 7390464688738180,
+         "index": 0,
+         "title": "Count",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 8172469210795908,
+         "index": 1,
+         "primary": true,
+         "title": "Sample",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 165
+      },
+      {
+         "id": 7751950453215108,
+         "index": 2,
+         "title": "1X Imaging Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 5987409380462468,
+         "index": 3,
+         "title": "Imaging Start Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 91
+      },
+      {
+         "id": 7358218151169924,
+         "index": 4,
+         "title": "Imaging Start Time",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 3668869583425412,
+         "index": 5,
+         "title": "Drop-off Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 70
+      },
+      {
+         "id": 7010871500033924,
+         "index": 6,
+         "title": "Imaging End Date",
+         "type": "DATE",
+         "validation": true,
+         "version": 0,
+         "width": 75
+      },
+      {
+         "id": 8933908273205124,
+         "index": 7,
+         "title": "Imaging End Time",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 854119816318852,
+         "index": 8,
+         "options": [
+            "0.025X SSC",
+            "0.05X SSC"
+         ],
+         "title": "Imaging Buffer",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 114
+      },
+      {
+         "id": 5357719443689348,
+         "index": 9,
+         "options": [
+            "ExaSPIM",
+            "MesoSPIM",
+            "ExA-SPIM Beta 1",
+            "ExA-SPIM Beta 2"
+         ],
+         "title": "Microscope",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 124
+      },
+      {
+         "id": 3105919630004100,
+         "index": 10,
+         "options": [
+            "Dropped off in 440 fridge",
+            "Dropped off on 440 bench",
+            "Imaged, stored in PBS Azide 0.01%",
+            "Stored in 4C deli fridge in PBS Azide 0.01%",
+            "Stored in 4C deli fridge in PBS Azide 0.01% / Moved to imaging chamber during the weekend (9/16)",
+            "Stored in 4C deli fridge in PBS Azide 0.05%"
+         ],
+         "title": "Status",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 180
+      },
+      {
+         "formula": "=INDEX({Combo ExM Sample_mRNA Anch Processing_Geno}, ROUNDUP(MATCH(Sample@row, {Combo ExM Sample_mRNA Anch Processing Range 1}, 0) / 2))",
+         "id": 6451094460780420,
+         "index": 11,
+         "title": "Genotype",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 276
+      },
+      {
+         "formula": "=INDEX({Combo ExM Sample_mRNA Anch Processing_Label}, ROUNDUP(MATCH(Sample@row, {Combo ExM Sample_mRNA Anch Processing_ID}, 0) / 2))",
+         "id": 4199294647095172,
+         "index": 12,
+         "title": "Label",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 94
+      },
+      {
+         "formula": "=INDEX({Combo ExM Sample_mRNA Anch Processing_Fluo}, ROUNDUP(MATCH(Sample@row, {Combo ExM Sample_mRNA Anch Processing_ID}, 0) / 2))",
+         "id": 8702894274465668,
+         "index": 13,
+         "title": "Fluorophore",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 117
+      },
+      {
+         "id": 7125805770428292,
+         "index": 14,
+         "options": [
+            "488",
+            "561",
+            "639"
+         ],
+         "title": "Signal channel(s)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 2,
+         "width": 61
+      },
+      {
+         "id": 3295611976634244,
+         "index": 15,
+         "options": [
+            "488",
+            "561",
+            "639"
+         ],
+         "title": "Auto-fluorescence channel(s)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 2,
+         "width": 61
+      },
+      {
+         "id": 5958720178573188,
+         "index": 16,
+         "title": "Focus (N mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 83
+      },
+      {
+         "id": 3706920364887940,
+         "index": 17,
+         "title": "ETL Offset",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 83
+      },
+      {
+         "id": 7609519257374596,
+         "index": 18,
+         "title": "Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 496
+      },
+      {
+         "id": 1980019723161476,
+         "index": 19,
+         "title": "Notes (1)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 409
+      },
+      {
+         "id": 6483619350531972,
+         "index": 20,
+         "title": "Verified Mouse Tracker for Metadata Intake",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 105
+      },
+      {
+         "id": 4231819536846724,
+         "index": 21,
+         "title": "notes on missing metadata",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 112
+      }
+   ],
+   "createdAt": "2023-04-11T17:18:52+00:00Z",
+   "dependenciesEnabled": false,
+   "effectiveAttachmentOptions": [
+      "BOX_COM",
+      "DROPBOX",
+      "EGNYTE",
+      "EVERNOTE",
+      "FILE",
+      "GOOGLE_DRIVE",
+      "LINK",
+      "ONEDRIVE"
+   ],
+   "ganttEnabled": false,
+   "hasSummaryFields": true,
+   "id": 2709792011276164,
+   "modifiedAt": "2026-07-09T18:02:36+00:00Z",
+   "name": "ExASPIM Imaging Queue",
+   "permalink": "https://example.com/sheets/def",
+   "readOnly": true,
+   "resourceManagementEnabled": false,
+   "rows": [
+      {
+         "cells": [
+            {
+               "columnId": 7390464688738180
+            },
+            {
+               "columnId": 8172469210795908,
+               "displayValue": "822178",
+               "value": 822178.0
+            },
+            {
+               "columnId": 7751950453215108,
+               "value": "2026-04-03"
+            },
+            {
+               "columnId": 5987409380462468,
+               "value": "2026-04-03"
+            },
+            {
+               "columnId": 7358218151169924,
+               "displayValue": "7:00 PM",
+               "value": "7:00 PM"
+            },
+            {
+               "columnId": 3668869583425412,
+               "value": "2026-04-03"
+            },
+            {
+               "columnId": 7010871500033924,
+               "value": "2026-04-06"
+            },
+            {
+               "columnId": 8933908273205124,
+               "displayValue": "4:00 PM",
+               "value": "4:00 PM"
+            },
+            {
+               "columnId": 854119816318852,
+               "displayValue": "10 mM Ascorbic Acid",
+               "value": "10 mM Ascorbic Acid"
+            },
+            {
+               "columnId": 5357719443689348,
+               "displayValue": "ExA-SPIM Beta 2",
+               "value": "ExA-SPIM Beta 2"
+            },
+            {
+               "columnId": 3105919630004100,
+               "displayValue": "Dropped off on 440 bench",
+               "value": "Dropped off on 440 bench"
+            },
+            {
+               "columnId": 6451094460780420,
+               "displayValue": "C57BL/6J + AiP1996-AiE2199m",
+               "formula": "=INDEX({Combo ExM Sample_mRNA Anch Processing_Geno}, ROUNDUP(MATCH(Sample@row, {Combo ExM Sample_mRNA Anch Processing Range 1}, 0) / 2))",
+               "value": "C57BL/6J + AiP1996-AiE2199m"
+            },
+            {
+               "columnId": 4199294647095172,
+               "displayValue": "tdTomato",
+               "formula": "=INDEX({Combo ExM Sample_mRNA Anch Processing_Label}, ROUNDUP(MATCH(Sample@row, {Combo ExM Sample_mRNA Anch Processing_ID}, 0) / 2))",
+               "value": "tdTomato"
+            },
+            {
+               "columnId": 8702894274465668,
+               "displayValue": "AF 568",
+               "formula": "=INDEX({Combo ExM Sample_mRNA Anch Processing_Fluo}, ROUNDUP(MATCH(Sample@row, {Combo ExM Sample_mRNA Anch Processing_ID}, 0) / 2))",
+               "value": "AF 568"
+            },
+            {
+               "columnId": 7125805770428292,
+               "displayValue": "561",
+               "value": "561"
+            },
+            {
+               "columnId": 3295611976634244,
+               "displayValue": "488",
+               "value": "488"
+            },
+            {
+               "columnId": 5958720178573188
+            },
+            {
+               "columnId": 3706920364887940
+            },
+            {
+               "columnId": 7609519257374596,
+               "displayValue": "Bright and sparse. Several very bright neurons in hindbrain with large projections throughout cerebellum",
+               "value": "Bright and sparse. Several very bright neurons in hindbrain with large projections throughout cerebellum"
+            },
+            {
+               "columnId": 1980019723161476
+            },
+            {
+               "columnId": 6483619350531972
+            },
+            {
+               "columnId": 4231819536846724
+            }
+         ],
+         "createdAt": "2026-04-04T02:13:47+00:00Z",
+         "expanded": true,
+         "id": 7602296964841348,
+         "modifiedAt": "2026-04-04T02:13:47+00:00Z",
+         "rowNumber": 186,
+         "siblingId": 3098697337470852
+      }
+   ],
+   "totalRowCount": 1,
+   "userPermissions": {
+      "summaryPermissions": "READ_WRITE"
+   },
+   "userSettings": {
+      "criticalPathEnabled": false,
+      "displaySummaryTasks": true
+   },
+   "version": 1162,
+   "workspace": {
+      "id": 4328390162442116,
+      "name": "ExASPIM Datasets"
+   }
+}

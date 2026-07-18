@@ -1,0 +1,1411 @@
+{
+   "accessLevel": "EDITOR_SHARE",
+   "columns": [
+      {
+         "id": 3714301747482500,
+         "index": 0,
+         "title": "#",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 49
+      },
+      {
+         "id": 3659183871184772,
+         "index": 1,
+         "title": "ExM processing status?",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 70
+      },
+      {
+         "description": "Where/What process is the brain in.  How can I find it? \n\nAlive \n\nPerfused in 4C \n\nTissue Processing \n\nTissue Processing Complete",
+         "id": 1458059328049028,
+         "index": 2,
+         "options": [
+            "Alive",
+            "Died Prior to PF",
+            "Perfused, in 4C",
+            "Tissue Processing",
+            "Tissue Processing Complete",
+            "Fail - no ExM",
+            "Fail - Poor Dissection, no ExM",
+            "Fail - Poor Perfusion, no ExM"
+         ],
+         "title": "Status",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 80
+      },
+      {
+         "id": 1462501933797252,
+         "index": 3,
+         "primary": true,
+         "tags": [
+            "GANTT_DISPLAY_LABEL"
+         ],
+         "title": "Mouse ID",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 386
+      },
+      {
+         "formula": "=PARENT([Mouse ID]@row)",
+         "id": 6853034603663236,
+         "index": 4,
+         "title": "Sample Name",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 141
+      },
+      {
+         "description": "Which Tissue Processing Workflow are we using?  ExM\nSmartSPIM\nTissueCyte\nSectioning/Staining/Imaging\nOther",
+         "id": 8039677411938180,
+         "index": 5,
+         "options": [
+            "ExM",
+            "smartSPIM",
+            "smartSPIM + mFISH",
+            "smartSPIM + ExM",
+            "Section",
+            "Other",
+            "test"
+         ],
+         "title": "Workflow",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 102
+      },
+      {
+         "description": "What Expt is this for? Describes viral strategy, target, experimental \ngoal etc",
+         "id": 1484022992555908,
+         "index": 6,
+         "title": "Project Description ",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 186
+      },
+      {
+         "formula": "=[Perfusion Date]@row - [Virus1 Injection Date]@row",
+         "id": 144086045249412,
+         "index": 7,
+         "title": "Expression time (days)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 90
+      },
+      {
+         "id": 5966101561167748,
+         "index": 8,
+         "title": "Pedigree",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 168
+      },
+      {
+         "id": 8217901374852996,
+         "index": 9,
+         "options": [
+            "M",
+            "F"
+         ],
+         "title": "Sex",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 47
+      },
+      {
+         "id": 899551980375940,
+         "index": 10,
+         "tags": [
+            "GANTT_START_DATE"
+         ],
+         "title": "DOB",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 66
+      },
+      {
+         "description": "Have I put in a request with NSB?  Check if Done.",
+         "id": 5403151607746436,
+         "index": 11,
+         "title": "Stx Injection Requested?",
+         "type": "CHECKBOX",
+         "validation": true,
+         "version": 0,
+         "width": 95
+      },
+      {
+         "description": "Have I put in a request with LAS?  Check if Done.",
+         "id": 2782795786047364,
+         "index": 12,
+         "title": "RO Injection Requested?",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 93
+      },
+      {
+         "id": 158378064039812,
+         "index": 13,
+         "title": "Perfusion Requested?",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 92
+      },
+      {
+         "id": 2957816813801348,
+         "index": 14,
+         "title": "Inj Details/TAM dose",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 103
+      },
+      {
+         "id": 5565393041051524,
+         "index": 15,
+         "title": "TAM dosing (last day)",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 66
+      },
+      {
+         "id": 3916359265111940,
+         "index": 16,
+         "options": [
+            "GFP",
+            "tdTomato",
+            "GFP/tdTomato",
+            "mKate",
+            "SYFP",
+            "CTB 488",
+            "CTB 594",
+            "CTB 555",
+            "CTB 647"
+         ],
+         "title": "Label",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 2,
+         "width": 100
+      },
+      {
+         "description": "Indicates which viruses were used or mixed together.",
+         "id": 6923460195340164,
+         "index": 17,
+         "options": [
+            "N/A",
+            "V1",
+            "V2",
+            "V3",
+            "V1+V2",
+            "V1+V3",
+            "V2+V3",
+            "V1+V2+V3",
+            "V1+V2+V3"
+         ],
+         "title": "Virus Mix RO",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 79
+      },
+      {
+         "description": "Total Volume of virus + buffer\n injected into the mouse",
+         "id": 4698119271829380,
+         "index": 18,
+         "title": "Virus Mix Total Volume injected RO (uL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 97
+      },
+      {
+         "description": "Solution used to dilute virus if applicable.",
+         "id": 404781915918212,
+         "index": 19,
+         "title": "Virus Mix Vehicle RO",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 78
+      },
+      {
+         "id": 8180414900293508,
+         "index": 20,
+         "tags": [
+            "CALENDAR_START_DATE",
+            "GANTT_END_DATE"
+         ],
+         "title": "Virus1 Injection Date",
+         "type": "DATE",
+         "validation": true,
+         "version": 0,
+         "width": 92
+      },
+      {
+         "id": 862065505816452,
+         "index": 21,
+         "title": "Virus1 Age of Injection",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 70
+      },
+      {
+         "id": 1061793413681028,
+         "index": 22,
+         "options": [
+            "RO",
+            "Stereotaxic",
+            "n/a"
+         ],
+         "title": "Virus1 Injection Type",
+         "type": "PICKLIST",
+         "validation": true,
+         "version": 0,
+         "width": 101
+      },
+      {
+         "id": 5365665133186948,
+         "index": 23,
+         "options": [
+            "AAV-PHP-eB_Syn-Flex-TREx2-tTA",
+            "AAV-PHP-eB_Syn-fDIO TRE-2tTA",
+            "AAV-PHP-eB_7x-TRE-tDTomato",
+            "AAV-PHP-eB_TREx7-tdTomato",
+            "CAG-FLEX-tdTom PHP.eB",
+            "7x-TRE-3x-eGFP",
+            "pAAV-TRE-DIO-GFP-IRES-tTA",
+            "Ef1a-fDOI-eGFP PHP.eB"
+         ],
+         "title": "Virus1",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 271
+      },
+      {
+         "id": 5618574067453828,
+         "index": 24,
+         "title": "AiP#",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 103
+      },
+      {
+         "id": 3113865319501700,
+         "index": 25,
+         "title": "Virus1 ID",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 72
+      },
+      {
+         "description": "The starting concentration of the stock virus (matches AIBS VT#) that is used in the experiment.",
+         "id": 7617464946872196,
+         "index": 26,
+         "title": "Virus1 Stock Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 92
+      },
+      {
+         "id": 4275549066973060,
+         "index": 27,
+         "title": "Working Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 113
+      },
+      {
+         "description": "The number of Genome Counts (GC) that are administered to the mouse.  Only applies to RO injections.",
+         "id": 1987965412659076,
+         "index": 28,
+         "title": "Virus1 Dose (GC)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "description": "The final concentration or titer (GC/mL) of virus that gets injected in the mouse.  (FOR METADATA PURPOSES ONLY)",
+         "hidden": true,
+         "id": 8670870749794180,
+         "index": 29,
+         "title": "Virus1 Effective Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 161
+      },
+      {
+         "id": 7676949326417796,
+         "index": 30,
+         "title": "Virus1 AP (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 65
+      },
+      {
+         "id": 2047449792204676,
+         "index": 31,
+         "title": "Virus1 ML (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 67
+      },
+      {
+         "id": 6551049419575172,
+         "index": 32,
+         "title": "Virus1 DV (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 68
+      },
+      {
+         "id": 1293960661127044,
+         "index": 33,
+         "title": "VIrus1 DV-b (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 75
+      },
+      {
+         "description": "Required if the virus was not mixed",
+         "id": 2747643882065796,
+         "index": 34,
+         "title": "Virus1 Stereotaxic Volume Injected (nL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 83
+      },
+      {
+         "id": 5797560288497540,
+         "index": 35,
+         "title": "Virus2 Injection Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 105
+      },
+      {
+         "formula": "=[Virus2 Injection Date]@row - DOB@row",
+         "id": 4108576491523972,
+         "index": 36,
+         "title": "Virus2 Age of Injection",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 94
+      },
+      {
+         "id": 3070266537103236,
+         "index": 37,
+         "options": [
+            "RO",
+            "Stereotaxic",
+            "n/a"
+         ],
+         "title": "Virus2 Injection Type",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 86
+      },
+      {
+         "id": 3276091070304132,
+         "index": 38,
+         "options": [
+            "AAV-PHP-eB_Syn-Flex TRE-2tTA",
+            "AAV-PHP-eB_Syn-fDIO TRE-2tTA",
+            "AAV-PHP-eB_7x-TRE-tDTomato",
+            "AAV-PHP-eB_TREx7-tdTomato",
+            "CAG-FLEX-tdTom PHP.eB",
+            "AAV-PHP-eB_7x-TRE-3xGFP",
+            "AAV-PHP-eB_TREx7-3xGFP",
+            "pAAV-TRE-DIO-GFP-IRES-tTA",
+            "Ef1a-fDOI-eGFP PHP.eB"
+         ],
+         "title": "Virus2",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 266
+      },
+      {
+         "id": 3973741844664196,
+         "index": 39,
+         "title": "Virus2 AiP#",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 7779690697674628,
+         "index": 40,
+         "title": "Virus2 ID",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 82
+      },
+      {
+         "description": "The starting concentration of the stock virus (matches AIBS VT#) that is used in the experiment.",
+         "id": 2150191163461508,
+         "index": 41,
+         "title": "Virus2 Stock Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 89
+      },
+      {
+         "id": 822428977893252,
+         "index": 42,
+         "title": "Virus2 Working Titer (GC/mL",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 102
+      },
+      {
+         "description": "The number of Genome Counts (GC) that are administered to the mouse.",
+         "id": 6653790790832004,
+         "index": 43,
+         "title": "Virus2 Dose (GC)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 131
+      },
+      {
+         "description": "The final concentration or titer (GC/mL) of virus that gets injected in the mouse.  Calculated for metadata requirements.",
+         "id": 5011696052555652,
+         "index": 44,
+         "title": "Virus2 Effective Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 78
+      },
+      {
+         "id": 2213733209165700,
+         "index": 45,
+         "title": "Virus2 AP (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 59
+      },
+      {
+         "id": 6717332836536196,
+         "index": 46,
+         "title": "Virus2 ML (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 60
+      },
+      {
+         "id": 4465533022850948,
+         "index": 47,
+         "title": "Virus2 DV (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 61
+      },
+      {
+         "id": 3545760474812292,
+         "index": 48,
+         "title": "Virus2 DV-b (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 73
+      },
+      {
+         "description": "Required only if virus was not mixed",
+         "id": 4239765226344324,
+         "index": 49,
+         "title": "Virus2 Stereotaxic Volume Injected (nL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 90
+      },
+      {
+         "id": 4999443695751044,
+         "index": 50,
+         "title": "Virus3 Injection Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 103
+      },
+      {
+         "formula": "=[Virus3 Injection Date]@row - DOB@row",
+         "id": 8612176118894468,
+         "index": 51,
+         "title": "Virus3 Age of Injection",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 88
+      },
+      {
+         "id": 780508909752196,
+         "index": 52,
+         "options": [
+            "RO",
+            "Stereotaxic",
+            "n/a"
+         ],
+         "title": "Virus3 Injection Type",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 90
+      },
+      {
+         "id": 4784000552882052,
+         "index": 53,
+         "options": [
+            "AAV-PHP-eB_7x-TRE-tDTomato",
+            "AAV-PHP-eB_7x-TRE-3x-eGFP",
+            "AAV-TRE-DIO-GFP-IRES-tTA Supernova",
+            "SADB19_dG_4eGFP_MARCKS-GFP(EnvA)"
+         ],
+         "title": "Virus3",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 244
+      },
+      {
+         "id": 1904875626860420,
+         "index": 54,
+         "title": "Virus3 AiP#",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 243
+      },
+      {
+         "id": 8688102315872132,
+         "index": 55,
+         "title": "Virus3 ID",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "description": "The starting concentration of the stock virus (matches AIBS VT#) that is used in the experiment.",
+         "id": 2532200739196804,
+         "index": 56,
+         "title": "Virus3 Stock Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 94
+      },
+      {
+         "description": "The number of Genome Counts (GC) that are administered to the mouse.",
+         "id": 7035800366567300,
+         "index": 57,
+         "title": "Virus3 Dose (GC)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 98
+      },
+      {
+         "description": "The final concentration or titer (GC/mL) of virus that gets injected in the mouse.",
+         "id": 508096425185156,
+         "index": 58,
+         "title": "Virus3 Effective Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 40
+      },
+      {
+         "id": 4361788087816068,
+         "index": 59,
+         "title": "Virus3 AP (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 89
+      },
+      {
+         "id": 8865387715186564,
+         "index": 60,
+         "title": "Virus3 ML (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 80
+      },
+      {
+         "id": 280400925511556,
+         "index": 61,
+         "title": "Virus3 DV (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 82
+      },
+      {
+         "id": 495844068380548,
+         "index": 62,
+         "title": "Virus3 DV-b (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 96
+      },
+      {
+         "description": "Required only if virus was not mixed",
+         "id": 7251243509436292,
+         "index": 63,
+         "title": "Virus3 Stereotaxic Volume Injected (nL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 92
+      },
+      {
+         "id": 5914718843916164,
+         "index": 64,
+         "title": "Virus4 Injection Date",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 89
+      },
+      {
+         "id": 1411119216545668,
+         "index": 65,
+         "title": "Virus4 Age of Injection",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 87
+      },
+      {
+         "id": 7040618750758788,
+         "index": 66,
+         "title": "Virus4 Injection Type",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 93
+      },
+      {
+         "id": 2537019123388292,
+         "index": 67,
+         "title": "Virus4",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 205
+      },
+      {
+         "id": 4788818937073540,
+         "index": 68,
+         "title": "Virus4 ID",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 93
+      },
+      {
+         "id": 7497768258195332,
+         "index": 69,
+         "title": "Virus4 Stock Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 1868268723982212,
+         "index": 70,
+         "title": "Virus4 Dose (GC)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 99
+      },
+      {
+         "id": 6371868351352708,
+         "index": 71,
+         "title": "Virus4 Effective Titer (GC/mL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 40
+      },
+      {
+         "id": 4120068537667460,
+         "index": 72,
+         "title": "Virus4 AP (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 89
+      },
+      {
+         "id": 8623668165037956,
+         "index": 73,
+         "title": "Virus4 ML (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 72
+      },
+      {
+         "id": 460893840428932,
+         "index": 74,
+         "title": "Virus4 DV (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 78
+      },
+      {
+         "id": 4964493467799428,
+         "index": 75,
+         "title": "Virus4 DV-b (mm)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 79
+      },
+      {
+         "id": 2712693654114180,
+         "index": 76,
+         "title": "Stereotaxic Volume Injected (nL)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 98
+      },
+      {
+         "description": "Some perfusions have pre-perfusion Heparin dosed.  Add units of Heparin here (typically 200U)",
+         "id": 5295955619303300,
+         "index": 77,
+         "title": "Heparin Dose (U)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 71
+      },
+      {
+         "id": 1495493210230660,
+         "index": 78,
+         "title": "Perfused",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 117
+      },
+      {
+         "id": 3768626641325956,
+         "index": 79,
+         "options": [
+            "4% PFA fix, Stored in PBS Azide 0.01%",
+            "4% PFA fix, Stored in PBS",
+            "n/a"
+         ],
+         "title": "Perfusion Type",
+         "type": "PICKLIST",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 4661977691410308,
+         "index": 80,
+         "title": "Perfusion Date",
+         "type": "DATE",
+         "validation": false,
+         "version": 0,
+         "width": 85
+      },
+      {
+         "id": 2410177877725060,
+         "index": 81,
+         "title": "Age of Perfusion",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 81
+      },
+      {
+         "id": 8743364853714820,
+         "index": 82,
+         "title": "LAS Injection Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 445
+      },
+      {
+         "id": 6913777505095556,
+         "index": 83,
+         "title": "LAS Perfusion/Dissection Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 1284277970882436,
+         "index": 84,
+         "title": "Gross Anatomy Notes (Pre-Processing)",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 5787877598252932,
+         "index": 85,
+         "title": "Other Notes",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 185
+      },
+      {
+         "id": 191596992876420,
+         "index": 86,
+         "title": "Other Notes2",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 96
+      },
+      {
+         "id": 3924157929574276,
+         "index": 87,
+         "title": "NeuroGlancer Link",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 743271656886148,
+         "index": 88,
+         "title": "Good Labeling Sparsity",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 73
+      },
+      {
+         "id": 8101845666140036,
+         "index": 89,
+         "title": "Target Area of Interest",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 109
+      },
+      {
+         "id": 3536077784567684,
+         "index": 90,
+         "title": "Investigator",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 1,
+         "width": 150
+      },
+      {
+         "id": 412349291515780,
+         "index": 91,
+         "title": "Project Code",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 4915948918886276,
+         "index": 92,
+         "title": "Project Name",
+         "type": "TEXT_NUMBER",
+         "validation": false,
+         "version": 0,
+         "width": 150
+      },
+      {
+         "id": 5999092837601156,
+         "index": 93,
+         "title": "Death/Health Issues",
+         "type": "CHECKBOX",
+         "validation": false,
+         "version": 0,
+         "width": 48
+      }
+   ],
+   "createdAt": "2023-04-11T18:57:38+00:00Z",
+   "dependenciesEnabled": false,
+   "effectiveAttachmentOptions": [
+      "BOX_COM",
+      "DROPBOX",
+      "EGNYTE",
+      "EVERNOTE",
+      "FILE",
+      "GOOGLE_DRIVE",
+      "LINK",
+      "ONEDRIVE"
+   ],
+   "ganttEnabled": true,
+   "hasSummaryFields": false,
+   "id": 4574277042917252,
+   "modifiedAt": "2026-07-09T18:42:01+00:00Z",
+   "name": "Mouse Tracker - Molecular Anatomy",
+   "permalink": "https://example.com/sheets/abc",
+   "readOnly": true,
+   "resourceManagementEnabled": false,
+   "rows": [
+      {
+         "cells": [
+            {
+               "columnId": 3714301747482500,
+               "displayValue": "14",
+               "value": 14.0
+            },
+            {
+               "columnId": 3659183871184772,
+               "displayValue": "Imaged",
+               "formula": "=INDEX({ExM Sample Tracking_Status}, ROUNDUP(MATCH([Mouse ID]@row, {ExM Sample Tracking_ID}, 0) / 2))",
+               "value": "Imaged"
+            },
+            {
+               "columnId": 1458059328049028,
+               "displayValue": "Tissue Processing",
+               "value": "Tissue Processing"
+            },
+            {
+               "columnId": 1462501933797252,
+               "displayValue": "822178",
+               "value": 822178.0
+            },
+            {
+               "columnId": 6853034603663236,
+               "displayValue": "C57BL/6J + AiP1996-AiE2199m",
+               "formula": "=PARENT([Mouse ID]@row)",
+               "value": "C57BL/6J + AiP1996-AiE2199m"
+            },
+            {
+               "columnId": 8039677411938180,
+               "displayValue": "ExM",
+               "value": "ExM"
+            },
+            {
+               "columnId": 1484022992555908,
+               "displayValue": "AiE2199m (5E+11) - save for potential ExASPIM",
+               "value": "AiE2199m (5E+11) - save for potential ExASPIM"
+            },
+            {
+               "columnId": 144086045249412,
+               "displayValue": "49",
+               "formula": "=[Perfusion Date]@row - [Virus1 Injection Date]@row",
+               "value": 49.0
+            },
+            {
+               "columnId": 5966101561167748,
+               "displayValue": "C57BL6J",
+               "value": "C57BL6J"
+            },
+            {
+               "columnId": 8217901374852996,
+               "displayValue": "M",
+               "value": "M"
+            },
+            {
+               "columnId": 899551980375940,
+               "value": "2025-07-08"
+            },
+            {
+               "columnId": 5403151607746436
+            },
+            {
+               "columnId": 2782795786047364,
+               "value": true
+            },
+            {
+               "columnId": 158378064039812,
+               "value": true
+            },
+            {
+               "columnId": 2957816813801348
+            },
+            {
+               "columnId": 5565393041051524
+            },
+            {
+               "columnId": 3916359265111940,
+               "displayValue": "tdTomato",
+               "value": "tdTomato"
+            },
+            {
+               "columnId": 6923460195340164,
+               "displayValue": "V1+V2+V3",
+               "value": "V1+V2+V3"
+            },
+            {
+               "columnId": 4698119271829380,
+               "displayValue": "100",
+               "value": 100.0
+            },
+            {
+               "columnId": 404781915918212,
+               "displayValue": "AAV Buffer",
+               "value": "AAV Buffer"
+            },
+            {
+               "columnId": 8180414900293508,
+               "value": "2025-08-13"
+            },
+            {
+               "columnId": 862065505816452,
+               "displayValue": "36",
+               "formula": "=[Virus1 Injection Date]@row - DOB@row",
+               "value": 36.0
+            },
+            {
+               "columnId": 1061793413681028,
+               "displayValue": "RO",
+               "value": "RO"
+            },
+            {
+               "columnId": 5365665133186948,
+               "displayValue": "AAV-PhP.eB-AiE2199m-minBG-iCre(R297T)-BGHpA",
+               "value": "AAV-PhP.eB-AiE2199m-minBG-iCre(R297T)-BGHpA"
+            },
+            {
+               "columnId": 5618574067453828,
+               "displayValue": "AiP1996",
+               "value": "AiP1996"
+            },
+            {
+               "columnId": 3113865319501700,
+               "displayValue": "VT8281g",
+               "value": "VT8281g"
+            },
+            {
+               "columnId": 7617464946872196,
+               "displayValue": "4.60E+13",
+               "value": "4.60E+13"
+            },
+            {
+               "columnId": 4275549066973060
+            },
+            {
+               "columnId": 1987965412659076,
+               "displayValue": "5E+11",
+               "value": "5E+11"
+            },
+            {
+               "columnId": 8670870749794180,
+               "displayValue": "5000000000000",
+               "formula": "=VALUE(MID([Virus1 Dose (GC)]@row, 1, FIND(\"E\", [Virus1 Dose (GC)]@row) - 1)) * 10 ^ (VALUE(MID([Virus1 Dose (GC)]@row, FIND(\"E\", [Virus1 Dose (GC)]@row) + 2, LEN([Virus1 Dose (GC)]@row) - FIND(\"E\", [Virus1 Dose (GC)]@row) + 1)) * IF(MID([Virus1 Dose (GC)]@row, FIND(\"E\", [Virus1 Dose (GC)]@row) + 1, 1) = \"+\", 1, -1)) / 0.1",
+               "value": 5000000000000.0
+            },
+            {
+               "columnId": 7676949326417796
+            },
+            {
+               "columnId": 2047449792204676
+            },
+            {
+               "columnId": 6551049419575172
+            },
+            {
+               "columnId": 1293960661127044
+            },
+            {
+               "columnId": 2747643882065796
+            },
+            {
+               "columnId": 5797560288497540,
+               "value": "2025-08-13"
+            },
+            {
+               "columnId": 4108576491523972,
+               "displayValue": "36",
+               "formula": "=[Virus2 Injection Date]@row - DOB@row",
+               "value": 36.0
+            },
+            {
+               "columnId": 3070266537103236,
+               "displayValue": "RO",
+               "value": "RO"
+            },
+            {
+               "columnId": 3276091070304132,
+               "displayValue": "AAV-PHP-eB_Syn-Flex-TREx2-tTA",
+               "value": "AAV-PHP-eB_Syn-Flex-TREx2-tTA"
+            },
+            {
+               "columnId": 3973741844664196
+            },
+            {
+               "columnId": 7779690697674628,
+               "displayValue": "VT7619g",
+               "value": "VT7619g"
+            },
+            {
+               "columnId": 2150191163461508,
+               "displayValue": "2.14E+13",
+               "value": "2.14E+13"
+            },
+            {
+               "columnId": 822428977893252
+            },
+            {
+               "columnId": 6653790790832004,
+               "displayValue": "1.00E+8",
+               "value": "1.00E+8"
+            },
+            {
+               "columnId": 5011696052555652,
+               "displayValue": "1000000000",
+               "formula": "=VALUE(MID([Virus2 Dose (GC)]@row, 1, FIND(\"E\", [Virus2 Dose (GC)]@row) - 1)) * 10 ^ (VALUE(MID([Virus2 Dose (GC)]@row, FIND(\"E\", [Virus2 Dose (GC)]@row) + 2, LEN([Virus2 Dose (GC)]@row) - FIND(\"E\", [Virus2 Dose (GC)]@row) + 1)) * IF(MID([Virus2 Dose (GC)]@row, FIND(\"E\", [Virus2 Dose (GC)]@row) + 1, 1) = \"+\", 1, -1)) / 0.1",
+               "value": 1000000000.0
+            },
+            {
+               "columnId": 2213733209165700
+            },
+            {
+               "columnId": 6717332836536196
+            },
+            {
+               "columnId": 4465533022850948
+            },
+            {
+               "columnId": 3545760474812292
+            },
+            {
+               "columnId": 4239765226344324
+            },
+            {
+               "columnId": 4999443695751044,
+               "value": "2025-08-13"
+            },
+            {
+               "columnId": 8612176118894468,
+               "displayValue": "36",
+               "formula": "=[Virus3 Injection Date]@row - DOB@row",
+               "value": 36.0
+            },
+            {
+               "columnId": 780508909752196,
+               "displayValue": "RO",
+               "value": "RO"
+            },
+            {
+               "columnId": 4784000552882052,
+               "displayValue": "AAV-PHP-eB_7x-TRE-tDTomato",
+               "value": "AAV-PHP-eB_7x-TRE-tDTomato"
+            },
+            {
+               "columnId": 1904875626860420
+            },
+            {
+               "columnId": 8688102315872132,
+               "displayValue": "VT8007g",
+               "value": "VT8007g"
+            },
+            {
+               "columnId": 2532200739196804,
+               "displayValue": "4.67e+13",
+               "value": "4.67e+13"
+            },
+            {
+               "columnId": 7035800366567300,
+               "displayValue": "1.80E+11",
+               "value": "1.80E+11"
+            },
+            {
+               "columnId": 508096425185156,
+               "displayValue": "1800000000000",
+               "formula": "=VALUE(MID([Virus3 Dose (GC)]@row, 1, FIND(\"E\", [Virus3 Dose (GC)]@row) - 1)) * 10 ^ (VALUE(MID([Virus3 Dose (GC)]@row, FIND(\"E\", [Virus3 Dose (GC)]@row) + 2, LEN([Virus3 Dose (GC)]@row) - FIND(\"E\", [Virus3 Dose (GC)]@row) + 1)) * IF(MID([Virus3 Dose (GC)]@row, FIND(\"E\", [Virus3 Dose (GC)]@row) + 1, 1) = \"+\", 1, -1)) / 0.1",
+               "value": 1800000000000.0
+            },
+            {
+               "columnId": 4361788087816068
+            },
+            {
+               "columnId": 8865387715186564
+            },
+            {
+               "columnId": 280400925511556
+            },
+            {
+               "columnId": 495844068380548
+            },
+            {
+               "columnId": 7251243509436292
+            },
+            {
+               "columnId": 5914718843916164
+            },
+            {
+               "columnId": 1411119216545668
+            },
+            {
+               "columnId": 7040618750758788
+            },
+            {
+               "columnId": 2537019123388292
+            },
+            {
+               "columnId": 4788818937073540
+            },
+            {
+               "columnId": 7497768258195332
+            },
+            {
+               "columnId": 1868268723982212
+            },
+            {
+               "columnId": 6371868351352708
+            },
+            {
+               "columnId": 4120068537667460
+            },
+            {
+               "columnId": 8623668165037956
+            },
+            {
+               "columnId": 460893840428932
+            },
+            {
+               "columnId": 4964493467799428
+            },
+            {
+               "columnId": 2712693654114180
+            },
+            {
+               "columnId": 5295955619303300
+            },
+            {
+               "columnId": 1495493210230660,
+               "value": true
+            },
+            {
+               "columnId": 3768626641325956,
+               "displayValue": "4% PFA fix, Stored in PBS Azide 0.01%",
+               "value": "4% PFA fix, Stored in PBS Azide 0.01%"
+            },
+            {
+               "columnId": 4661977691410308,
+               "value": "2025-10-01"
+            },
+            {
+               "columnId": 2410177877725060,
+               "displayValue": "85",
+               "formula": "=[Perfusion Date]@row - DOB@row",
+               "value": 85.0
+            },
+            {
+               "columnId": 8743364853714820,
+               "displayValue": "1/2 needle depth, did not hit bone plate. Bleeding.",
+               "value": "1/2 needle depth, did not hit bone plate. Bleeding."
+            },
+            {
+               "columnId": 6913777505095556,
+               "displayValue": "Lung inflation.",
+               "value": "Lung inflation."
+            },
+            {
+               "columnId": 1284277970882436,
+               "displayValue": "Difficult to see, one bright cell labeled on ventral side, possibly some cells labeled deep",
+               "value": "Difficult to see, one bright cell labeled on ventral side, possibly some cells labeled deep"
+            },
+            {
+               "columnId": 5787877598252932,
+               "displayValue": "A little on dense side but good enough to put thru exaspim.",
+               "value": "A little on dense side but good enough to put thru exaspim."
+            },
+            {
+               "columnId": 191596992876420
+            },
+            {
+               "columnId": 3924157929574276
+            },
+            {
+               "columnId": 743271656886148,
+               "value": true
+            },
+            {
+               "columnId": 8101845666140036
+            },
+            {
+               "columnId": 3536077784567684
+            },
+            {
+               "columnId": 412349291515780
+            },
+            {
+               "columnId": 4915948918886276
+            },
+            {
+               "columnId": 5999092837601156
+            }
+         ],
+         "createdAt": "2025-09-10T23:29:30+00:00Z",
+         "expanded": true,
+         "id": 3359602998316932,
+         "modifiedAt": "2026-06-18T00:35:48+00:00Z",
+         "parentId": 7394291928829828,
+         "rowNumber": 896,
+         "siblingId": 5611402812002180
+      }
+   ],
+   "totalRowCount": 1,
+   "userPermissions": {
+      "summaryPermissions": "READ_WRITE"
+   },
+   "userSettings": {
+      "criticalPathEnabled": false,
+      "displaySummaryTasks": true
+   },
+   "version": 6946,
+   "workspace": {
+      "id": 4328390162442116,
+      "name": "ExASPIM Datasets"
+   }
+}
