@@ -1,13 +1,11 @@
 """Module to handle endpoint responses"""
 
-from asyncio import gather, to_thread
+from asyncio import gather
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException, Query, Request, status
+from fastapi import APIRouter, Query, Request, status
 from fastapi.openapi.models import Example
 from fastapi_cache.decorator import cache
-from smartsheet import Smartsheet
-from smartsheet.models.error import Error as SmartsheetError
 
 from aind_smartsheet_service_server.configs import settings
 from aind_smartsheet_service_server.exaspim_models import (
@@ -28,13 +26,38 @@ from aind_smartsheet_service_server.models import (
     ProtocolsModel,
     SheetFields,
 )
+from aind_smartsheet_service_server.sheet_cache import fetch_sheet
 
 router = APIRouter()
+
+# (sheet id, row model, id of the column holding the specimen id)
+EXASPIM_SHEETS = [
+    (
+        settings.mouse_tracker_id,
+        MouseTracker,
+        int(MouseTracker.model_fields["mouse_id"].validation_alias),
+    ),
+    (
+        settings.sample_tracking_id,
+        SampleTracking,
+        int(SampleTracking.model_fields["sample"].validation_alias),
+    ),
+    (
+        settings.imaging_queue_id,
+        ImagingQueue,
+        int(ImagingQueue.model_fields["sample"].validation_alias),
+    ),
+    (
+        settings.exaspim_qc_sheet_id,
+        QcSheet,
+        int(QcSheet.model_fields["sample"].validation_alias),
+    ),
+]
 
 
 @cache(expire=600)
 async def get_smartsheet(
-    sheet_id: int, user_agent: str, max_connections: int, access_token: str
+    sheet_id: int, user_agent: str, access_token: str
 ) -> dict:
     """
     Download and cache smartsheet object as a json string.
@@ -42,7 +65,6 @@ async def get_smartsheet(
     ----------
     sheet_id : int
     user_agent : str
-    max_connections : int
     access_token : str
 
     Returns
@@ -50,18 +72,9 @@ async def get_smartsheet(
     dict or raises Exception
     """
 
-    client = Smartsheet(
-        user_agent=user_agent,
-        max_connections=max_connections,
-        access_token=access_token,
+    sheet_fields = await fetch_sheet(
+        sheet_id=sheet_id, user_agent=user_agent, access_token=access_token
     )
-    sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
-
-    if isinstance(sheet, SmartsheetError):
-        sheet_status = sheet.result.status_code
-        message = sheet.result.message or "Smartsheet error"
-        raise HTTPException(status_code=sheet_status, detail=message)
-    sheet_fields = SheetFields.model_validate_json(json_data=sheet.to_json())
     return sheet_fields.model_dump(mode="json", exclude_none=True)
 
 
@@ -118,7 +131,6 @@ async def get_funding(
     raw_sheet = await get_smartsheet(
         sheet_id=sheet_id,
         user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
         access_token=settings.access_token.get_secret_value(),
     )
     handler = SheetHandler(sheet_fields=SheetFields.model_validate(raw_sheet))
@@ -151,7 +163,6 @@ async def get_project_names():
     raw_sheet = await get_smartsheet(
         sheet_id=sheet_id,
         user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
         access_token=settings.access_token.get_secret_value(),
     )
     handler = SheetHandler(sheet_fields=SheetFields.model_validate(raw_sheet))
@@ -198,7 +209,6 @@ async def get_protocols(
     raw_sheet = await get_smartsheet(
         sheet_id=sheet_id,
         user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
         access_token=settings.access_token.get_secret_value(),
     )
     handler = SheetHandler(
@@ -246,7 +256,6 @@ async def get_perfusions(
     raw_sheet = await get_smartsheet(
         sheet_id=sheet_id,
         user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
         access_token=settings.access_token.get_secret_value(),
     )
     handler = SheetHandler(
@@ -290,110 +299,20 @@ async def get_exaspim_info(
     ## exaSPIM Information endpoint
     Returns exaSPIM info for a given specimen_id.
     """
-    # Limit number of requests
-    semaphore = request.app.state.semaphore
-    async with semaphore:
-        # Download sheets in parallel
-        tasks = [
-            get_smartsheet(
-                sheet_id=settings.mouse_tracker_id,
-                user_agent=settings.user_agent,
-                max_connections=settings.max_connections,
-                access_token=settings.access_token_2.get_secret_value(),
-            ),
-            get_smartsheet(
-                sheet_id=settings.sample_tracking_id,
-                user_agent=settings.user_agent,
-                max_connections=settings.max_connections,
-                access_token=settings.access_token_2.get_secret_value(),
-            ),
-            get_smartsheet(
-                sheet_id=settings.imaging_queue_id,
-                user_agent=settings.user_agent,
-                max_connections=settings.max_connections,
-                access_token=settings.access_token_2.get_secret_value(),
-            ),
-            get_smartsheet(
-                sheet_id=settings.exaspim_qc_sheet_id,
-                user_agent=settings.user_agent,
-                max_connections=settings.max_connections,
-                access_token=settings.access_token_2.get_secret_value(),
-            ),
+    sheet_index_cache = request.app.state.sheet_index_cache
+    indexes = await gather(
+        *[
+            sheet_index_cache.get(sheet_id=sheet_id, column_id=column_id)
+            for sheet_id, _, column_id in EXASPIM_SHEETS
         ]
-        (
-            mouse_tracker_sheet,
-            sample_tracker_sheet,
-            imaging_queue_sheet,
-            qc_sheet,
-        ) = await gather(*tasks)
-        mouse_tracker_handler = SheetHandler(
-            sheet_fields=SheetFields.model_validate(mouse_tracker_sheet),
-            row_filter=lambda row: default_row_filter(
-                row=row,
-                column_id=(
-                    None
-                    if specimen_id is None
-                    else int(
-                        MouseTracker.model_fields["mouse_id"].validation_alias
-                    )
-                ),
-                column_display_value=specimen_id,
-            ),
-        )
-        sample_tracker_handler = SheetHandler(
-            sheet_fields=SheetFields.model_validate(sample_tracker_sheet),
-            row_filter=lambda row: default_row_filter(
-                row=row,
-                column_id=(
-                    None
-                    if specimen_id is None
-                    else int(
-                        SampleTracking.model_fields["sample"].validation_alias
-                    )
-                ),
-                column_display_value=specimen_id,
-            ),
-        )
-        imaging_queue_handler = SheetHandler(
-            sheet_fields=SheetFields.model_validate(imaging_queue_sheet),
-            row_filter=lambda row: default_row_filter(
-                row=row,
-                column_id=(
-                    None
-                    if specimen_id is None
-                    else int(
-                        ImagingQueue.model_fields["sample"].validation_alias
-                    )
-                ),
-                column_display_value=specimen_id,
-            ),
-        )
-        qc_handler = SheetHandler(
-            sheet_fields=SheetFields.model_validate(qc_sheet),
-            row_filter=lambda row: default_row_filter(
-                row=row,
-                column_id=(
-                    None
-                    if specimen_id is None
-                    else int(QcSheet.model_fields["sample"].validation_alias)
-                ),
-                column_display_value=specimen_id,
-            ),
-        )
-        mouse_tracker_info = mouse_tracker_handler.get_parsed_sheet_model(
-            model=MouseTracker
-        )
-        sample_tracking_info = sample_tracker_handler.get_parsed_sheet_model(
-            model=SampleTracking
-        )
-        imaging_queue_info = imaging_queue_handler.get_parsed_sheet_model(
-            model=ImagingQueue
-        )
-        qc_sheet_info = qc_handler.get_parsed_sheet_model(model=QcSheet)
-        bundled_info = ExaSPIMInfo(
-            mouse_tracker_info=mouse_tracker_info,
-            sample_tracking_info=sample_tracking_info,
-            imaging_queue_info=imaging_queue_info,
-            qc_sheet_info=qc_sheet_info,
-        )
-    return bundled_info
+    )
+    mouse_tracker_info, sample_tracking_info, imaging_queue_info, qc_info = [
+        [model.model_validate(row) for row in index.get(specimen_id, [])]
+        for index, (_, model, _) in zip(indexes, EXASPIM_SHEETS)
+    ]
+    return ExaSPIMInfo(
+        mouse_tracker_info=mouse_tracker_info,
+        sample_tracking_info=sample_tracking_info,
+        imaging_queue_info=imaging_queue_info,
+        qc_sheet_info=qc_info,
+    )

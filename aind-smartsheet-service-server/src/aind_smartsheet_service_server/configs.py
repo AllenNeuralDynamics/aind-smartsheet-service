@@ -50,6 +50,13 @@ class Settings(SecretsManagerBaseSettings):
         default=2,
         description="Limit number of large sheets being downloaded at once.",
     )
+    cache_refresh_interval: int = Field(
+        default=300,
+        description=(
+            "Seconds between background refreshes of the cached exaSPIM "
+            "sheets. Set to 0 to disable."
+        ),
+    )
     redis_url: Optional[RedisDsn] = Field(default=None)
     model_config = SettingsConfigDict(env_prefix="SMARTSHEET_")
 

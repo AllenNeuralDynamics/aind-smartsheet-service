@@ -1,12 +1,13 @@
 """Test routes"""
 
-from unittest.mock import AsyncMock, MagicMock, call, patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
-from fastapi import HTTPException
-from smartsheet.models.error import Error as SmartsheetError
+from fastapi_cache.backends.inmemory import InMemoryBackend
 from starlette.testclient import TestClient
 
+from aind_smartsheet_service_server.configs import settings
+from aind_smartsheet_service_server.models import SheetFields
 from aind_smartsheet_service_server.route import get_smartsheet
 
 
@@ -20,72 +21,21 @@ class TestRoutes:
         assert 200 == response.status_code
         assert "OK" == response.json()["status"]
 
-    @patch("smartsheet.sheets.Sheets.get_sheet")
-    async def test_get_smartsheet(self, mock_get_sheet: MagicMock):
-        """Tests get_access_token method"""
-        mock_sheet = MagicMock()
-        mock_sheet.to_json.return_value = (
-            '{"accessLevel": "EDITOR_SHARE", '
-            '"columns": [], '
-            '"createdAt": "2023-07-31T20:52:39+00:00Z", '
-            '"dependenciesEnabled": false, '
-            '"effectiveAttachmentOptions": [], '
-            '"ganttEnabled": false, '
-            '"hasSummaryFields": false, '
-            '"id": 2802362280267652, '
-            '"modifiedAt": "2023-12-20T18:36:26+00:00Z", '
-            '"name": "Project Name and Funding Source", '
-            '"permalink": "https://app.smartsheet.com/sheets/abc", '
-            '"readOnly": true, '
-            '"resourceManagementEnabled": false, '
-            '"rows": [], '
-            '"totalRowCount": 0, '
-            '"userPermissions": {}, '
-            '"userSettings": {}, '
-            '"version": 40, '
-            '"workspace": {}}'
-        )
-        mock_get_sheet.return_value = mock_sheet
+    @patch("aind_smartsheet_service_server.route.fetch_sheet")
+    async def test_get_smartsheet(
+        self, mock_fetch_sheet: AsyncMock, mock_raw_funding_sheet
+    ):
+        """Tests get_smartsheet returns the fetched sheet as a dict"""
+        mock_fetch_sheet.return_value = mock_raw_funding_sheet
         sheet = await get_smartsheet(
             sheet_id=0,
             user_agent="user",
-            max_connections=1,
             access_token="token",
         )
-        mock_get_sheet.assert_has_calls([call(0), call().to_json()])
-        assert 40 == sheet["version"]
-
-    @patch("smartsheet.sheets.Sheets.get_sheet")
-    async def test_get_smartsheet_fail(self, mock_get_sheet: MagicMock):
-        """Tests generic exception handling"""
-        mock_get_sheet.side_effect = Exception("Fail")
-        with pytest.raises(Exception) as e:
-            _ = await get_smartsheet(
-                sheet_id=0,
-                user_agent="user",
-                max_connections=1,
-                access_token="token",
-            )
-        assert "Fail" in str(e.value)
-
-    @patch("smartsheet.sheets.Sheets.get_sheet")
-    async def test_get_smartsheet_error(self, mock_get_sheet: MagicMock):
-        """Tests SmartsheetError triggers HTTPException"""
-        error_obj = SmartsheetError(MagicMock())
-        error_obj.result = MagicMock()
-        error_obj.result.status_code = 404
-        error_obj.result.message = "Not Found"
-        mock_get_sheet.return_value = error_obj
-
-        with pytest.raises(HTTPException) as e:
-            _ = await get_smartsheet(
-                sheet_id=0,
-                user_agent="user",
-                max_connections=1,
-                access_token="token",
-            )
-        assert e.value.status_code == 404
-        assert "Not Found" in str(e.value.detail)
+        mock_fetch_sheet.assert_awaited_once_with(
+            sheet_id=0, user_agent="user", access_token="token"
+        )
+        assert mock_raw_funding_sheet.version == sheet["version"]
 
     @patch("aind_smartsheet_service_server.route.get_smartsheet")
     async def test_get_funding(
@@ -226,29 +176,43 @@ class TestRoutes:
         assert 200 == response.status_code
         assert expected_response == response.json()
 
-    @patch("aind_smartsheet_service_server.route.get_smartsheet")
+    @patch("aind_smartsheet_service_server.sheet_cache.fetch_sheet")
     async def test_get_exaspim_info(
         self,
-        mock_get_smartsheet: AsyncMock,
+        mock_fetch_sheet: AsyncMock,
         client: TestClient,
-        mock_raw_mouse_tracking_sheet: str,
-        mock_raw_sample_tracking_sheet: str,
-        mock_raw_imaging_queue_sheet: str,
-        mock_raw_qc_sheet: str,
+        in_memory_cache: InMemoryBackend,
+        mock_raw_mouse_tracking_sheet: SheetFields,
+        mock_raw_sample_tracking_sheet: SheetFields,
+        mock_raw_imaging_queue_sheet: SheetFields,
+        mock_raw_qc_sheet: SheetFields,
     ):
         """Tests successful retrieval of info from exaSPIM Smartsheets"""
-        mock_get_smartsheet.side_effect = [
-            mock_raw_mouse_tracking_sheet,
-            mock_raw_sample_tracking_sheet,
-            mock_raw_imaging_queue_sheet,
-            mock_raw_qc_sheet,
-        ]
+        sheets = {
+            settings.mouse_tracker_id: mock_raw_mouse_tracking_sheet,
+            settings.sample_tracking_id: mock_raw_sample_tracking_sheet,
+            settings.imaging_queue_id: mock_raw_imaging_queue_sheet,
+            settings.exaspim_qc_sheet_id: mock_raw_qc_sheet,
+        }
+        mock_fetch_sheet.side_effect = lambda sheet_id, **_: sheets[sheet_id]
         response = client.get("/get_exaspim_info?specimen_id=822178")
         assert response.status_code == 200
         assert len(response.json()["mouse_tracker_info"]) == 1
         assert len(response.json()["sample_tracking_info"]) == 1
         assert len(response.json()["imaging_queue_info"]) == 1
         assert len(response.json()["qc_sheet_info"]) == 1
+        assert mock_fetch_sheet.await_count == 4
+
+        # Second request is served from the cache
+        response = client.get("/get_exaspim_info?specimen_id=000000")
+        assert response.status_code == 200
+        assert response.json() == {
+            "mouse_tracker_info": [],
+            "sample_tracking_info": [],
+            "imaging_queue_info": [],
+            "qc_sheet_info": [],
+        }
+        assert mock_fetch_sheet.await_count == 4
 
 
 if __name__ == "__main__":

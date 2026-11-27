@@ -8,6 +8,8 @@ from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
 from pydantic import RedisDsn
 
 from aind_smartsheet_service_server.configs import settings
@@ -18,6 +20,17 @@ RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 patch(
     "fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f
 ).start()
+
+
+@pytest.fixture()
+def in_memory_cache() -> InMemoryBackend:
+    """Fresh in-memory cache. FastAPICache.init only takes effect once, so
+    reset it first in case another test initialized a different backend."""
+    FastAPICache.reset()
+    backend = InMemoryBackend()
+    backend._store.clear()
+    FastAPICache.init(backend, prefix="test")
+    return backend
 
 
 @pytest.fixture()
@@ -101,7 +114,7 @@ def client_with_redis() -> Generator[TestClient, Any, None]:
     with (
         patch(
             "aind_smartsheet_service_server.main.settings",
-            return_value=settings_with_redis,
+            settings_with_redis,
         ),
         patch(
             "aind_smartsheet_service_server.main.from_url", return_value=None
