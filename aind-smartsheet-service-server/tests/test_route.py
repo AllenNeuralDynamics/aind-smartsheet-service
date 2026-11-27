@@ -1,10 +1,8 @@
 """Test routes"""
 
-from unittest.mock import AsyncMock, MagicMock, call, patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
-from fastapi import HTTPException
-from smartsheet.models.error import Error as SmartsheetError
 from starlette.testclient import TestClient
 
 from aind_smartsheet_service_server.route import get_smartsheet
@@ -20,72 +18,21 @@ class TestRoutes:
         assert 200 == response.status_code
         assert "OK" == response.json()["status"]
 
-    @patch("smartsheet.sheets.Sheets.get_sheet")
-    async def test_get_smartsheet(self, mock_get_sheet: MagicMock):
-        """Tests get_access_token method"""
-        mock_sheet = MagicMock()
-        mock_sheet.to_json.return_value = (
-            '{"accessLevel": "EDITOR_SHARE", '
-            '"columns": [], '
-            '"createdAt": "2023-07-31T20:52:39+00:00Z", '
-            '"dependenciesEnabled": false, '
-            '"effectiveAttachmentOptions": [], '
-            '"ganttEnabled": false, '
-            '"hasSummaryFields": false, '
-            '"id": 2802362280267652, '
-            '"modifiedAt": "2023-12-20T18:36:26+00:00Z", '
-            '"name": "Project Name and Funding Source", '
-            '"permalink": "https://app.smartsheet.com/sheets/abc", '
-            '"readOnly": true, '
-            '"resourceManagementEnabled": false, '
-            '"rows": [], '
-            '"totalRowCount": 0, '
-            '"userPermissions": {}, '
-            '"userSettings": {}, '
-            '"version": 40, '
-            '"workspace": {}}'
-        )
-        mock_get_sheet.return_value = mock_sheet
+    @patch("aind_smartsheet_service_server.route.fetch_sheet")
+    async def test_get_smartsheet(
+        self, mock_fetch_sheet: AsyncMock, mock_raw_funding_sheet
+    ):
+        """Tests get_smartsheet returns the fetched sheet as a dict"""
+        mock_fetch_sheet.return_value = mock_raw_funding_sheet
         sheet = await get_smartsheet(
             sheet_id=0,
             user_agent="user",
-            max_connections=1,
             access_token="token",
         )
-        mock_get_sheet.assert_has_calls([call(0), call().to_json()])
-        assert 40 == sheet["version"]
-
-    @patch("smartsheet.sheets.Sheets.get_sheet")
-    async def test_get_smartsheet_fail(self, mock_get_sheet: MagicMock):
-        """Tests generic exception handling"""
-        mock_get_sheet.side_effect = Exception("Fail")
-        with pytest.raises(Exception) as e:
-            _ = await get_smartsheet(
-                sheet_id=0,
-                user_agent="user",
-                max_connections=1,
-                access_token="token",
-            )
-        assert "Fail" in str(e.value)
-
-    @patch("smartsheet.sheets.Sheets.get_sheet")
-    async def test_get_smartsheet_error(self, mock_get_sheet: MagicMock):
-        """Tests SmartsheetError triggers HTTPException"""
-        error_obj = SmartsheetError(MagicMock())
-        error_obj.result = MagicMock()
-        error_obj.result.status_code = 404
-        error_obj.result.message = "Not Found"
-        mock_get_sheet.return_value = error_obj
-
-        with pytest.raises(HTTPException) as e:
-            _ = await get_smartsheet(
-                sheet_id=0,
-                user_agent="user",
-                max_connections=1,
-                access_token="token",
-            )
-        assert e.value.status_code == 404
-        assert "Not Found" in str(e.value.detail)
+        mock_fetch_sheet.assert_awaited_once_with(
+            sheet_id=0, user_agent="user", access_token="token"
+        )
+        assert mock_raw_funding_sheet.version == sheet["version"]
 
     @patch("aind_smartsheet_service_server.route.get_smartsheet")
     async def test_get_funding(

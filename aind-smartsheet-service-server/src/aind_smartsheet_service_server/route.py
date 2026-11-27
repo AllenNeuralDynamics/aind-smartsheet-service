@@ -1,13 +1,11 @@
 """Module to handle endpoint responses"""
 
-from asyncio import gather, to_thread
+from asyncio import gather
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException, Query, Request, status
+from fastapi import APIRouter, Query, Request, status
 from fastapi.openapi.models import Example
 from fastapi_cache.decorator import cache
-from smartsheet import Smartsheet
-from smartsheet.models.error import Error as SmartsheetError
 
 from aind_smartsheet_service_server.configs import settings
 from aind_smartsheet_service_server.exaspim_models import (
@@ -28,13 +26,14 @@ from aind_smartsheet_service_server.models import (
     ProtocolsModel,
     SheetFields,
 )
+from aind_smartsheet_service_server.sheet_cache import fetch_sheet
 
 router = APIRouter()
 
 
 @cache(expire=600)
 async def get_smartsheet(
-    sheet_id: int, user_agent: str, max_connections: int, access_token: str
+    sheet_id: int, user_agent: str, access_token: str
 ) -> dict:
     """
     Download and cache smartsheet object as a json string.
@@ -42,7 +41,6 @@ async def get_smartsheet(
     ----------
     sheet_id : int
     user_agent : str
-    max_connections : int
     access_token : str
 
     Returns
@@ -50,18 +48,9 @@ async def get_smartsheet(
     dict or raises Exception
     """
 
-    client = Smartsheet(
-        user_agent=user_agent,
-        max_connections=max_connections,
-        access_token=access_token,
+    sheet_fields = await fetch_sheet(
+        sheet_id=sheet_id, user_agent=user_agent, access_token=access_token
     )
-    sheet = await to_thread(client.Sheets.get_sheet, sheet_id)
-
-    if isinstance(sheet, SmartsheetError):
-        sheet_status = sheet.result.status_code
-        message = sheet.result.message or "Smartsheet error"
-        raise HTTPException(status_code=sheet_status, detail=message)
-    sheet_fields = SheetFields.model_validate_json(json_data=sheet.to_json())
     return sheet_fields.model_dump(mode="json", exclude_none=True)
 
 
@@ -118,7 +107,6 @@ async def get_funding(
     raw_sheet = await get_smartsheet(
         sheet_id=sheet_id,
         user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
         access_token=settings.access_token.get_secret_value(),
     )
     handler = SheetHandler(sheet_fields=SheetFields.model_validate(raw_sheet))
@@ -151,7 +139,6 @@ async def get_project_names():
     raw_sheet = await get_smartsheet(
         sheet_id=sheet_id,
         user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
         access_token=settings.access_token.get_secret_value(),
     )
     handler = SheetHandler(sheet_fields=SheetFields.model_validate(raw_sheet))
@@ -198,7 +185,6 @@ async def get_protocols(
     raw_sheet = await get_smartsheet(
         sheet_id=sheet_id,
         user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
         access_token=settings.access_token.get_secret_value(),
     )
     handler = SheetHandler(
@@ -246,7 +232,6 @@ async def get_perfusions(
     raw_sheet = await get_smartsheet(
         sheet_id=sheet_id,
         user_agent=settings.user_agent,
-        max_connections=settings.max_connections,
         access_token=settings.access_token.get_secret_value(),
     )
     handler = SheetHandler(
@@ -298,25 +283,21 @@ async def get_exaspim_info(
             get_smartsheet(
                 sheet_id=settings.mouse_tracker_id,
                 user_agent=settings.user_agent,
-                max_connections=settings.max_connections,
                 access_token=settings.access_token_2.get_secret_value(),
             ),
             get_smartsheet(
                 sheet_id=settings.sample_tracking_id,
                 user_agent=settings.user_agent,
-                max_connections=settings.max_connections,
                 access_token=settings.access_token_2.get_secret_value(),
             ),
             get_smartsheet(
                 sheet_id=settings.imaging_queue_id,
                 user_agent=settings.user_agent,
-                max_connections=settings.max_connections,
                 access_token=settings.access_token_2.get_secret_value(),
             ),
             get_smartsheet(
                 sheet_id=settings.exaspim_qc_sheet_id,
                 user_agent=settings.user_agent,
-                max_connections=settings.max_connections,
                 access_token=settings.access_token_2.get_secret_value(),
             ),
         ]
