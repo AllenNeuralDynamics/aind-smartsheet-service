@@ -114,7 +114,7 @@ def client_with_redis() -> Generator[TestClient, Any, None]:
     with (
         patch(
             "aind_smartsheet_service_server.main.settings",
-            return_value=settings_with_redis,
+            settings_with_redis,
         ),
         patch(
             "aind_smartsheet_service_server.main.from_url", return_value=None

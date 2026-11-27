@@ -2,7 +2,7 @@
 
 import logging
 import os
-from asyncio import Semaphore
+from asyncio import Semaphore, create_task
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -15,7 +15,7 @@ from redis.asyncio import from_url  # noqa
 
 from aind_smartsheet_service_server import __version__ as service_version
 from aind_smartsheet_service_server.configs import settings
-from aind_smartsheet_service_server.route import router
+from aind_smartsheet_service_server.route import EXASPIM_SHEETS, router
 from aind_smartsheet_service_server.sheet_cache import SheetIndexCache
 
 # The log level can be set by adding an environment variable before launch.
@@ -44,7 +44,17 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     else:
         FastAPICache.init(InMemoryBackend(), prefix="fastapi-cache")
+    refresh_task = None
+    if settings.cache_refresh_interval > 0:
+        refresh_task = create_task(
+            app.state.sheet_index_cache.refresh_periodically(
+                sheets=[(s_id, c_id) for s_id, _, c_id in EXASPIM_SHEETS],
+                interval=settings.cache_refresh_interval,
+            )
+        )
     yield
+    if refresh_task is not None:
+        refresh_task.cancel()
 
 
 # noinspection PyTypeChecker

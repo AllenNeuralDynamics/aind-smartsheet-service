@@ -232,3 +232,32 @@ class TestSheetIndexCache:
         with pytest.raises(HTTPException):
             await index_cache.get(102, SUBJECT_COLUMN)
         assert in_memory_cache._store == {}
+
+    @patch("aind_smartsheet_service_server.sheet_cache.sleep")
+    @patch.object(SheetIndexCache, "get")
+    async def test_refresh_periodically(
+        self,
+        mock_get: AsyncMock,
+        mock_sleep: AsyncMock,
+        index_cache: SheetIndexCache,
+        caplog: pytest.LogCaptureFixture,
+    ):
+        """Tests all sheets are refreshed each pass and failures are logged
+        without stopping the loop"""
+        mock_get.side_effect = [{}, HTTPException(status_code=503), {}, {}]
+        # Stop the loop after the second pass
+        mock_sleep.side_effect = [None, asyncio.CancelledError()]
+        with pytest.raises(asyncio.CancelledError):
+            await index_cache.refresh_periodically(
+                sheets=[(1, 10), (2, 20)], interval=300
+            )
+        assert (
+            mock_get.await_args_list
+            == [
+                ((1, 10), {"refresh": True}),
+                ((2, 20), {"refresh": True}),
+            ]
+            * 2
+        )
+        assert mock_sleep.await_args_list == [((300,),), ((300,),)]
+        assert "Failed to refresh sheet 2" in caplog.text

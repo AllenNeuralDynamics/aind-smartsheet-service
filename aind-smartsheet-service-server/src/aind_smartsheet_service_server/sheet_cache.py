@@ -1,9 +1,10 @@
 """Module to download sheets from the Smartsheet REST API and cache them"""
 
 import json
-from asyncio import Lock, Semaphore, sleep, to_thread
+import logging
+from asyncio import Lock, Semaphore, gather, sleep, to_thread
 from collections import defaultdict
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import httpx
 from fastapi import HTTPException
@@ -156,3 +157,32 @@ class SheetIndexCache:
             index = await to_thread(build_index, sheet, column_id)
             await backend.set(key, json.dumps(index), expire=self.expire)
         return index
+
+    async def refresh_periodically(
+        self, sheets: List[Tuple[int, int]], interval: int
+    ) -> None:
+        """
+        Download the sheets now and then every interval seconds, so requests
+        are served from the cache instead of waiting on a download. Failures
+        are logged and retried on the next pass.
+        Parameters
+        ----------
+        sheets : List[Tuple[int, int]]
+          List of (sheet_id, column_id) to keep cached.
+        interval : int
+          Seconds to wait between refreshes.
+        """
+        while True:
+            results = await gather(
+                *[
+                    self.get(sheet_id, column_id, refresh=True)
+                    for sheet_id, column_id in sheets
+                ],
+                return_exceptions=True,
+            )
+            for (sheet_id, _), result in zip(sheets, results):
+                if isinstance(result, Exception):
+                    logging.warning(
+                        f"Failed to refresh sheet {sheet_id}: {result!r}"
+                    )
+            await sleep(interval)
