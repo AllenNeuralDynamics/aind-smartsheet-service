@@ -3,8 +3,11 @@
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from fastapi_cache.backends.inmemory import InMemoryBackend
 from starlette.testclient import TestClient
 
+from aind_smartsheet_service_server.configs import settings
+from aind_smartsheet_service_server.models import SheetFields
 from aind_smartsheet_service_server.route import get_smartsheet
 
 
@@ -173,29 +176,43 @@ class TestRoutes:
         assert 200 == response.status_code
         assert expected_response == response.json()
 
-    @patch("aind_smartsheet_service_server.route.get_smartsheet")
+    @patch("aind_smartsheet_service_server.sheet_cache.fetch_sheet")
     async def test_get_exaspim_info(
         self,
-        mock_get_smartsheet: AsyncMock,
+        mock_fetch_sheet: AsyncMock,
         client: TestClient,
-        mock_raw_mouse_tracking_sheet: str,
-        mock_raw_sample_tracking_sheet: str,
-        mock_raw_imaging_queue_sheet: str,
-        mock_raw_qc_sheet: str,
+        in_memory_cache: InMemoryBackend,
+        mock_raw_mouse_tracking_sheet: SheetFields,
+        mock_raw_sample_tracking_sheet: SheetFields,
+        mock_raw_imaging_queue_sheet: SheetFields,
+        mock_raw_qc_sheet: SheetFields,
     ):
         """Tests successful retrieval of info from exaSPIM Smartsheets"""
-        mock_get_smartsheet.side_effect = [
-            mock_raw_mouse_tracking_sheet,
-            mock_raw_sample_tracking_sheet,
-            mock_raw_imaging_queue_sheet,
-            mock_raw_qc_sheet,
-        ]
+        sheets = {
+            settings.mouse_tracker_id: mock_raw_mouse_tracking_sheet,
+            settings.sample_tracking_id: mock_raw_sample_tracking_sheet,
+            settings.imaging_queue_id: mock_raw_imaging_queue_sheet,
+            settings.exaspim_qc_sheet_id: mock_raw_qc_sheet,
+        }
+        mock_fetch_sheet.side_effect = lambda sheet_id, **_: sheets[sheet_id]
         response = client.get("/get_exaspim_info?specimen_id=822178")
         assert response.status_code == 200
         assert len(response.json()["mouse_tracker_info"]) == 1
         assert len(response.json()["sample_tracking_info"]) == 1
         assert len(response.json()["imaging_queue_info"]) == 1
         assert len(response.json()["qc_sheet_info"]) == 1
+        assert mock_fetch_sheet.await_count == 4
+
+        # Second request is served from the cache
+        response = client.get("/get_exaspim_info?specimen_id=000000")
+        assert response.status_code == 200
+        assert response.json() == {
+            "mouse_tracker_info": [],
+            "sample_tracking_info": [],
+            "imaging_queue_info": [],
+            "qc_sheet_info": [],
+        }
+        assert mock_fetch_sheet.await_count == 4
 
 
 if __name__ == "__main__":
